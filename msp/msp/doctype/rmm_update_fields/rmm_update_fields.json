@@ -1,0 +1,48 @@
+{
+ "actions": [],
+ "creation": "2026-01-07 10:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "field_name",
+  "field_label",
+  "update_on_sync"
+ ],
+ "fields": [
+  {
+   "fieldname": "field_name",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Field Name",
+   "options": "rmm_local_ip\nrmm_public_ip\nrmm_operating_system\nrmm_last_seen\nrmm_last_user\nrmm_specs\nrmm_software\nrmm_patches_pending\nrmm_needs_reboot\ntitle\ntype\nstatus\nserial_number\ndescription",
+   "reqd": 1
+  },
+  {
+   "fieldname": "field_label",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Field Label",
+   "read_only": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "update_on_sync",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Update on Sync"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-01-07 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "MSP",
+ "name": "RMM Update Fields",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

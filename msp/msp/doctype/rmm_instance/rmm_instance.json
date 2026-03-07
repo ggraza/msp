@@ -11,7 +11,11 @@
   "type",
   "api_url",
   "user",
-  "key"
+  "key",
+  "ignore_ssl",
+  "monitoring_types_section",
+  "available_monitoring_types",
+  "last_types_refresh"
  ],
  "fields": [
   {
@@ -48,6 +52,32 @@
    "fieldname": "key",
    "fieldtype": "Password",
    "label": "Key"
+  },
+  {
+   "default": "0",
+   "description": "Skip SSL certificate verification. Use only for self-signed or expired certificates.",
+   "fieldname": "ignore_ssl",
+   "fieldtype": "Check",
+   "label": "Ignore SSL Certificate"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "monitoring_types_section",
+   "fieldtype": "Section Break",
+   "label": "Available Monitoring Types"
+  },
+  {
+   "description": "Comma-separated list of monitoring types found in this RMM instance (e.g., server,workstation). Click 'Refresh Monitoring Types' to update.",
+   "fieldname": "available_monitoring_types",
+   "fieldtype": "Small Text",
+   "label": "Available Monitoring Types",
+   "read_only": 1
+  },
+  {
+   "fieldname": "last_types_refresh",
+   "fieldtype": "Datetime",
+   "label": "Last Types Refresh",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,

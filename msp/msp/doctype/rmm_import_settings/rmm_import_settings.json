@@ -1,0 +1,170 @@
+{
+ "actions": [],
+ "creation": "2026-01-07 10:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "general_section",
+  "update_existing",
+  "auto_create_types",
+  "column_break_general",
+  "sync_software",
+  "sync_patches",
+  "ad_options_section",
+  "auto_include_ad_data",
+  "skip_disabled_ad_accounts",
+  "ad_column_break",
+  "sync_ad_fields_on_update",
+  "type_mapping_section",
+  "type_mapping",
+  "status_mapping_section",
+  "status_mapping",
+  "update_fields_section",
+  "update_fields_description",
+  "fields_to_update_on_sync"
+ ],
+ "fields": [
+  {
+   "fieldname": "general_section",
+   "fieldtype": "Section Break",
+   "label": "General Settings"
+  },
+  {
+   "default": "1",
+   "description": "If checked, existing IT Objects will be updated when importing from RMM",
+   "fieldname": "update_existing",
+   "fieldtype": "Check",
+   "label": "Update Existing Objects"
+  },
+  {
+   "default": "1",
+   "description": "Automatically create IT Object Types if they don't exist (Server, Workstation)",
+   "fieldname": "auto_create_types",
+   "fieldtype": "Check",
+   "label": "Auto-Create Missing Types"
+  },
+  {
+   "fieldname": "column_break_general",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "1",
+   "description": "Sync installed software list to rmm_software field",
+   "fieldname": "sync_software",
+   "fieldtype": "Check",
+   "label": "Sync Software"
+  },
+  {
+   "default": "1",
+   "description": "Sync Windows Update patch information",
+   "fieldname": "sync_patches",
+   "fieldtype": "Check",
+   "label": "Sync Patches"
+  },
+  {
+   "fieldname": "ad_options_section",
+   "fieldtype": "Section Break",
+   "label": "Active Directory Options"
+  },
+  {
+   "default": "1",
+   "description": "AD-Daten automatisch bei Import einbeziehen wenn verfuegbar",
+   "fieldname": "auto_include_ad_data",
+   "fieldtype": "Check",
+   "label": "Auto-Include AD Data"
+  },
+  {
+   "default": "0",
+   "description": "Deaktivierte AD-Accounts nicht automatisch zur Auswahl vorschlagen",
+   "fieldname": "skip_disabled_ad_accounts",
+   "fieldtype": "Check",
+   "label": "Skip Disabled AD Accounts"
+  },
+  {
+   "fieldname": "ad_column_break",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "1",
+   "description": "AD-Felder bei Update bestehender IT Objects aktualisieren",
+   "fieldname": "sync_ad_fields_on_update",
+   "fieldtype": "Check",
+   "label": "Sync AD Fields on Update"
+  },
+  {
+   "fieldname": "type_mapping_section",
+   "fieldtype": "Section Break",
+   "label": "Type Mapping"
+  },
+  {
+   "description": "Map RMM monitoring types (server, workstation) to IT Object Types",
+   "fieldname": "type_mapping",
+   "fieldtype": "Table",
+   "label": "Type Mapping",
+   "options": "RMM Type Mapping"
+  },
+  {
+   "fieldname": "status_mapping_section",
+   "fieldtype": "Section Break",
+   "label": "Status Mapping"
+  },
+  {
+   "description": "Map RMM status values (online, offline, overdue) to IT Object Status",
+   "fieldname": "status_mapping",
+   "fieldtype": "Table",
+   "label": "Status Mapping",
+   "options": "RMM Status Mapping"
+  },
+  {
+   "fieldname": "update_fields_section",
+   "fieldtype": "Section Break",
+   "label": "Update Fields Configuration"
+  },
+  {
+   "fieldname": "update_fields_description",
+   "fieldtype": "HTML",
+   "label": "Description",
+   "options": "<p class=\"text-muted\">Configure which fields should be updated when syncing existing IT Objects. By default, RMM-specific fields are updated while user-defined fields (title, type, status) are preserved.</p>"
+  },
+  {
+   "description": "Select which fields should be overwritten when updating existing IT Objects",
+   "fieldname": "fields_to_update_on_sync",
+   "fieldtype": "Table",
+   "label": "Fields to Update on Sync",
+   "options": "RMM Update Fields"
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "issingle": 1,
+ "links": [],
+ "modified": "2026-01-22 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "MSP",
+ "name": "RMM Import Settings",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "print": 1,
+   "read": 1,
+   "role": "MSP Admin",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

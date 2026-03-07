@@ -84,17 +84,21 @@
   {
    "fieldname": "tactical_rmm_integration_section",
    "fieldtype": "Section Break",
-   "label": "Tactical RMM Integration"
+   "label": "Tactical RMM Integration (DEPRECATED)"
   },
   {
+   "description": "DEPRECATED: Use RMM Instance doctype instead. This field will be removed in a future version.",
    "fieldname": "api_url",
    "fieldtype": "Data",
-   "label": "API URL"
+   "label": "API URL (DEPRECATED)",
+   "read_only": 1
   },
   {
+   "description": "DEPRECATED: Use RMM Instance doctype instead. This field will be removed in a future version.",
    "fieldname": "api_key",
    "fieldtype": "Password",
-   "label": "API Key"
+   "label": "API Key (DEPRECATED)",
+   "read_only": 1
   }
  ],
  "index_web_pages_for_search": 1,

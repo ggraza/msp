@@ -1,0 +1,1150 @@
+{
+  "CWWS03": {
+    "os": {
+      "caption": "Microsoft Windows 10 Pro",
+      "build": "19045.6456",
+      "version": "10.0.19045"
+    },
+    "summary": {
+      "connectivity_ok": false,
+      "needs_attention": true,
+      "is_rmm_managed": true,
+      "total_issues": 2
+    },
+    "services": [
+      {
+        "start_type": "Manual",
+        "name": "wuauserv",
+        "critical": true,
+        "ok": true,
+        "disabled": false,
+        "status": "Stopped",
+        "display_name": "Windows Update"
+      },
+      {
+        "start_type": "Manual",
+        "name": "bits",
+        "critical": false,
+        "ok": true,
+        "disabled": false,
+        "status": "Stopped",
+        "display_name": "BITS"
+      },
+      {
+        "start_type": "Auto",
+        "name": "cryptsvc",
+        "critical": false,
+        "ok": true,
+        "disabled": false,
+        "status": "Running",
+        "display_name": "CryptSvc"
+      },
+      {
+        "start_type": "Manual",
+        "name": "msiserver",
+        "critical": false,
+        "ok": true,
+        "disabled": false,
+        "status": "Stopped",
+        "display_name": "MSIServer"
+      },
+      {
+        "start_type": "Manual",
+        "name": "TrustedInstaller",
+        "critical": false,
+        "ok": true,
+        "disabled": false,
+        "status": "Stopped",
+        "display_name": "TrustedInstaller"
+      }
+    ],
+    "updates": {
+      "pending_important": 0,
+      "pending_driver": 13,
+      "days_since_last_success": 28,
+      "last_success": "2025-12-10T10:08:44",
+      "recent_history": [
+        {
+          "date": "2025-12-10T10:08:44",
+          "title": "Windows-Tool zum Entfernen bsartiger Software x64 - v5.138 (KB890830)",
+          "result": "Succeeded",
+          "succeeded": true
+        },
+        {
+          "date": "2025-11-18T10:05:32",
+          "title": "2025-11 Sicherheitsupdate fr Windows 10 Version 22H2 fr x64-basierte Systeme (KB5072653)",
+          "result": "Succeeded",
+          "succeeded": true
+        },
+        {
+          "date": "2025-11-12T10:08:45",
+          "title": "Windows-Tool zum Entfernen bsartiger Software x64 - v5.137 (KB890830)",
+          "result": "Succeeded",
+          "succeeded": true
+        },
+        {
+          "date": "2025-11-07T07:45:21",
+          "title": "9WZDNCRD29V9-MICROSOFT.MICROSOFTOFFICEHUB",
+          "result": "Failed",
+          "succeeded": false
+        },
+        {
+          "date": "2025-10-15T09:26:51",
+          "title": "2025-10 Kumulatives Update fr .NET Framework 3.5, 4.8 und 4.8.1 fr Windows 10 Version 22H2 fr x64 ((KB5066747))",
+          "result": "Succeeded",
+          "succeeded": true
+        },
+        {
+          "date": "2025-10-15T09:25:29",
+          "title": "Windows-Tool zum Entfernen bsartiger Software x64 - v5.136 (KB890830)",
+          "result": "Succeeded",
+          "succeeded": true
+        },
+        {
+          "date": "2025-10-15T09:22:41",
+          "title": "2025-10 Kumulatives Update fr Windows 10 Version 22H2 fr x64-basierte Systeme (KB5066791)",
+          "result": "Succeeded",
+          "succeeded": true
+        },
+        {
+          "date": "2025-09-26T09:26:43",
+          "title": "Windows-Tool zum Entfernen bsartiger Software x64 - v5.135 (KB890830)",
+          "result": "Succeeded",
+          "succeeded": true
+        },
+        {
+          "date": "2025-09-26T09:23:46",
+          "title": "2025-09 Kumulatives Update fr Windows 10 Version 22H2 fr x64-basierte Systeme (KB5065429)",
+          "result": "Succeeded",
+          "succeeded": true
+        },
+        {
+          "date": "2025-09-26T09:06:03",
+          "title": "2025-09 Kumulatives Update fr .NET Framework 3.5, 4.8 und 4.8.1 fr Windows 10 Version 22H2 fr x64 ((KB5065957))",
+          "result": "Succeeded",
+          "succeeded": true
+        }
+      ],
+      "pending_critical": 0,
+      "pending_list": [
+        {
+          "size_mb": 0.1,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Fujitsu Technology Solutions - LCD - FUJITSU B22W-6 LED proGREEN",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 6.2,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "FUJITSU - Firmware - 1.33.0.0",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 0.5,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Intel - SoftwareComponent - 1.46.2024.221",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 0.4,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Realtek - Net - 10.72.524.2024",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 11.9,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Realtek Semiconductor Corp. - MEDIA - 6.0.9738.1",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 0.0,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Realtek Semiconductor Corp. - Extension - 6.0.9738.1",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 0.2,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Intel - System - 2512.7.3.0",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 0.8,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Intel - SoftwareComponent - 2512.7.1.0",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 49.0,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Intel - SoftwareComponent - 2514.7.7.0",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 17.5,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Intel - SoftwareComponent - 1.76.95.0",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 5.0,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "SAMSUNG Electronics Co., Ltd.  - USB - 2.21.0.0",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 5.0,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "SAMSUNG Electronics Co., Ltd.  - Modem - 2.21.0.0",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 0.2,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Intel Driver Update (2540.8.7.0)",
+          "categories": [
+            "Drivers"
+          ]
+        }
+      ],
+      "pending_count": 13,
+      "history_count": 294
+    },
+    "issues": [
+      "Keine Verbindung zu Windows Update",
+      "Keine Verbindung zu Windows Update Alt"
+    ],
+    "connectivity": [
+      {
+        "ok": true,
+        "status": 200,
+        "url": "https://www.microsoft.com",
+        "name": "Microsoft"
+      },
+      {
+        "ok": false,
+        "status": 0,
+        "url": "https://update.microsoft.com",
+        "name": "Windows Update",
+        "error": "Der Remoteserver hat einen Fehler zurckgegeben: (403) Unzulssig."
+      },
+      {
+        "ok": false,
+        "status": 0,
+        "url": "https://windowsupdate.microsoft.com",
+        "name": "Windows Update Alt",
+        "error": "Der Remoteserver hat einen Fehler zurckgegeben: (403) Unzulssig."
+      }
+    ],
+    "hostname": "CWWS03",
+    "errors": [
+      {
+        "date": "2026-01-05T10:01:51",
+        "message": "Installationsfehler: Die Installation des folgenden Updates ist mit Fehler 0x80073D02 fehlgeschlagen: 9WZDNCRFJBMP-MICROSOFT.WINDOWSSTORE",
+        "level": "Error",
+        "id": 20
+      }
+    ],
+    "storage": {
+      "software_distribution_mb": 49.89,
+      "datastore_mb": 40.25,
+      "download_folder_mb": 0
+    },
+    "timestamp": "2026-01-07T12:15:56",
+    "status": "CRITICAL",
+    "managed_by": {
+      "tactical_service_status": "Running",
+      "tactical_rmm": true
+    },
+    "configuration": {
+      "policies": {
+        "au_options": 1,
+        "scheduled_install_time": null,
+        "no_auto_update": null,
+        "scheduled_install_day": null
+      },
+      "use_wsus": false,
+      "wsus_server": null,
+      "au_options": 1,
+      "au_options_text": "Deaktiviert (RMM-verwaltet)"
+    }
+  },
+  "AVNB01": {
+    "os": {
+      "caption": "Microsoft Windows 11 Pro",
+      "build": "22631.3880",
+      "version": "10.0.22631"
+    },
+    "summary": {
+      "connectivity_ok": false,
+      "needs_attention": true,
+      "is_rmm_managed": true,
+      "total_issues": 2
+    },
+    "services": [
+      {
+        "start_type": "Manual",
+        "name": "wuauserv",
+        "critical": true,
+        "ok": true,
+        "disabled": false,
+        "status": "Stopped",
+        "display_name": "Windows Update"
+      },
+      {
+        "start_type": "Auto",
+        "name": "bits",
+        "critical": false,
+        "ok": true,
+        "disabled": false,
+        "status": "Running",
+        "display_name": "BITS"
+      },
+      {
+        "start_type": "Auto",
+        "name": "cryptsvc",
+        "critical": false,
+        "ok": true,
+        "disabled": false,
+        "status": "Running",
+        "display_name": "CryptSvc"
+      },
+      {
+        "start_type": "Manual",
+        "name": "msiserver",
+        "critical": false,
+        "ok": true,
+        "disabled": false,
+        "status": "Stopped",
+        "display_name": "MSIServer"
+      },
+      {
+        "start_type": "Manual",
+        "name": "TrustedInstaller",
+        "critical": false,
+        "ok": true,
+        "disabled": false,
+        "status": "Stopped",
+        "display_name": "TrustedInstaller"
+      }
+    ],
+    "updates": {
+      "pending_important": 0,
+      "pending_driver": 51,
+      "days_since_last_success": 0,
+      "last_success": "2026-01-07T05:20:39",
+      "recent_history": [
+        {
+          "date": "2026-01-07T05:20:39",
+          "title": "Security Intelligence-Update fr Microsoft Defender Antivirus - KB2267602 (Version 1.443.538.0) - Aktueller Kanal (Allgemein)",
+          "result": "Succeeded",
+          "succeeded": true
+        },
+        {
+          "date": "2026-01-05T16:29:34",
+          "title": "Security Intelligence-Update fr Microsoft Defender Antivirus - KB2267602 (Version 1.443.512.0) - Aktueller Kanal (Allgemein)",
+          "result": "Succeeded",
+          "succeeded": true
+        },
+        {
+          "date": "2026-01-05T06:50:05",
+          "title": "Security Intelligence-Update fr Microsoft Defender Antivirus - KB2267602 (Version 1.443.506.0) - Aktueller Kanal (Allgemein)",
+          "result": "Succeeded",
+          "succeeded": true
+        },
+        {
+          "date": "2025-12-18T21:59:01",
+          "title": "Security Intelligence-Update fr Microsoft Defender Antivirus - KB2267602 (Version 1.443.201.0) - Aktueller Kanal (Allgemein)",
+          "result": "Succeeded",
+          "succeeded": true
+        },
+        {
+          "date": "2025-12-18T21:48:49",
+          "title": "Update fr Microsoft Defender Antivirus Antischadsoftwareplattform - KB4052623 (Version 4.18.25110.6) - Aktueller Kanal (Allgemein)",
+          "result": "Succeeded",
+          "succeeded": true
+        },
+        {
+          "date": "2025-12-17T06:48:57",
+          "title": "Security Intelligence-Update fr Microsoft Defender Antivirus - KB2267602 (Version 1.443.170.0) - Aktueller Kanal (Allgemein)",
+          "result": "Succeeded",
+          "succeeded": true
+        },
+        {
+          "date": "2025-12-15T04:47:28",
+          "title": "Security Intelligence-Update fr Microsoft Defender Antivirus - KB2267602 (Version 1.443.124.0) - Aktueller Kanal (Allgemein)",
+          "result": "Succeeded",
+          "succeeded": true
+        },
+        {
+          "date": "2025-12-14T04:47:29",
+          "title": "Security Intelligence-Update fr Microsoft Defender Antivirus - KB2267602 (Version 1.443.102.0) - Aktueller Kanal (Allgemein)",
+          "result": "Succeeded",
+          "succeeded": true
+        },
+        {
+          "date": "2025-12-13T04:57:46",
+          "title": "Security Intelligence-Update fr Microsoft Defender Antivirus - KB2267602 (Version 1.443.78.0) - Aktueller Kanal (Allgemein)",
+          "result": "Succeeded",
+          "succeeded": true
+        },
+        {
+          "date": "2025-12-11T17:43:49",
+          "title": "Security Intelligence-Update fr Microsoft Defender Antivirus - KB2267602 (Version 1.443.43.0) - Aktueller Kanal (Allgemein)",
+          "result": "Succeeded",
+          "succeeded": true
+        }
+      ],
+      "pending_critical": 0,
+      "pending_list": [
+        {
+          "size_mb": 0,
+          "downloaded": null,
+          "kb": "",
+          "is_driver": false,
+          "severity": "Unspecified",
+          "title": null,
+          "categories": [
+            null
+          ]
+        },
+        {
+          "size_mb": 0,
+          "downloaded": null,
+          "kb": "",
+          "is_driver": false,
+          "severity": "Unspecified",
+          "title": null,
+          "categories": [
+            null
+          ]
+        },
+        {
+          "size_mb": 0,
+          "downloaded": null,
+          "kb": "",
+          "is_driver": false,
+          "severity": "Unspecified",
+          "title": null,
+          "categories": [
+            null
+          ]
+        },
+        {
+          "size_mb": 0.0,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Fujitsu Technology Solutions - Monitor - 8/24/2017 12:00:00 AM - 1.0.0.0",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 17.2,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Intel - SoftwareComponent - 1.72.189.0",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 0.0,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Intel - Extension - 9.0.11701.44281",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 0.5,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Intel - SoftwareComponent - 1.46.2024.221",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 0.2,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Cirrus Logic, Inc. - MEDIA - 21.51.46.157",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 10.7,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Sonitude, Inc. - AudioProcessingObject - 2.0.11.61",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 1.4,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Synaptics Incorporated - Biometric - 6.0.130.1110",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 1.2,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Sonitude, Inc. - Extension - 17.20.39.4170",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 0.2,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Cirrus Logic, Inc. - Extension - 1.35.5.195",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 101.7,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Intel(R) Corporation - System - 10.29.0.11633",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 0.0,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Intel - Ports - 2441.7.0.0",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 0.0,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Intel - Extension - 2441.7.0.0",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 0.0,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Intel - Extension - 255.91.103.0",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 126.6,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Intel - SoftwareComponent - 255.91.103.0",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 12.8,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Realtek - SoftwareComponent - 11.0.6000.50",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 0.2,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Intel - System - 2512.7.3.0",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 0.8,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Intel - SoftwareComponent - 2512.7.1.0",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 49.0,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Intel - SoftwareComponent - 2514.7.7.0",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 18.5,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Intel - net - 23.140.0.3",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 5.2,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Intel Corporation - Bluetooth - 23.140.0.5",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 0.0,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Intel - Extension - 23.140.0.3",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 1030.9,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "NVIDIA - Display - 32.0.15.7344",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 21.0,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Realtek - AudioProcessingObject - 13.2697.1817.552",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 10.2,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Realtek - SoftwareComponent - 1.0.858.7",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 10.2,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Realtek - SoftwareComponent - 12.0.6000.364",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 0.1,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Realtek Semiconductor Corp. - Extension - 6.0.9844.1",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 0.1,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Realtek Semiconductor Corp. - Extension - 6.0.9844.1",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 12.3,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Realtek Semiconductor Corp. - MEDIA - 6.0.9844.1",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 0.0,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Intel Corporation - Extension - 40.25.725.165",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 6.4,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Intel Corporation - SoftwareComponent - 40.25.725.165",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 0.4,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Intel - Net - 2.1.5.6",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 320.6,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Realtek Semiconductor Corp. - Extension - 7.0.7.117",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 1.8,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Realtek - Extension - 9.21.3690.692",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 1.8,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Realtek - Extension - 9.21.3690.692",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 320.6,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Realtek Semiconductor Corp. - Extension - 7.0.7.117",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 0.0,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "HP Development Company, L.P. - Keyboard - 11.1.9.1",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 2.0,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "HP Development Company, L.P. - SoftwareComponent - 8.10.29.1",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 0.0,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "HP Development Company, L.P. - Extension - 8.10.29.1",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 136.3,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "HP Inc. - SoftwareComponent - 1.83.4311.0",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 14.2,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "HP Inc. - SoftwareComponent - 4.2.2494.0",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 0.4,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Realtek - Net - 1153.19.602.2025",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 53.8,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "HP Inc. - SoftwareComponent - 4.8.125.0",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 0.0,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "HP Inc. - Extension - 4.8.125.0",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 3.7,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "HP Inc. - SoftwareDevice - 1.1.8.64",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 17.3,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "HP Driver Update (1.10.0.0)",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 0.2,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Intel Driver Update (2540.8.7.0)",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 689.0,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Intel Corporation Driver Update (32.0.101.7077)",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 0.0,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Intel Corporation Driver Update (32.0.101.7077)",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 0,
+          "downloaded": null,
+          "kb": "",
+          "is_driver": false,
+          "severity": "Unspecified",
+          "title": null,
+          "categories": [
+            null
+          ]
+        },
+        {
+          "size_mb": 0.1,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Intel Driver Update (3.1.0.4599)",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 0.1,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Intel Driver Update (3.1.0.4599)",
+          "categories": [
+            "Drivers"
+          ]
+        },
+        {
+          "size_mb": 0.0,
+          "downloaded": false,
+          "kb": "",
+          "is_driver": true,
+          "severity": "Unspecified",
+          "title": "Intel Driver Update (3.1.0.4599)",
+          "categories": [
+            "Drivers"
+          ]
+        }
+      ],
+      "pending_count": 55,
+      "history_count": 243
+    },
+    "issues": [
+      "Keine Verbindung zu Windows Update",
+      "Keine Verbindung zu Windows Update Alt"
+    ],
+    "connectivity": [
+      {
+        "ok": true,
+        "status": 200,
+        "url": "https://www.microsoft.com",
+        "name": "Microsoft"
+      },
+      {
+        "ok": false,
+        "status": 0,
+        "url": "https://update.microsoft.com",
+        "name": "Windows Update",
+        "error": "Der Remoteserver hat einen Fehler zurckgegeben: (403) Unzulssig."
+      },
+      {
+        "ok": false,
+        "status": 0,
+        "url": "https://windowsupdate.microsoft.com",
+        "name": "Windows Update Alt",
+        "error": "Der Remoteserver hat einen Fehler zurckgegeben: (403) Unzulssig."
+      }
+    ],
+    "hostname": "AVNB01",
+    "errors": [
+      {
+        "date": "2026-01-06T06:43:39",
+        "message": "Installationsfehler: Die Installation des folgenden Updates ist mit Fehler 0x80073D02 fehlgeschlagen: 9N9PHDT62W94-AD2F1837.myHP",
+        "level": "Error",
+        "id": 20
+      },
+      {
+        "date": "2026-01-05T09:37:59",
+        "message": "Installationsfehler: Die Installation des folgenden Updates ist mit Fehler 0x80073D02 fehlgeschlagen: 9NMPJ99VJBWV-Microsoft.YourPhone",
+        "level": "Error",
+        "id": 20
+      },
+      {
+        "date": "2026-01-05T09:35:45",
+        "message": "Installationsfehler: Die Installation des folgenden Updates ist mit Fehler 0x80073D02 fehlgeschlagen: 9NTXGKQ8P7N0-MicrosoftWindows.CrossDevice",
+        "level": "Error",
+        "id": 20
+      },
+      {
+        "date": "2026-01-05T09:35:01",
+        "message": "Installationsfehler: Die Installation des folgenden Updates ist mit Fehler 0x80073D02 fehlgeschlagen: 9NTXGKQ8P7N0-MicrosoftWindows.CrossDevice",
+        "level": "Error",
+        "id": 20
+      }
+    ],
+    "storage": {
+      "software_distribution_mb": 46.96,
+      "datastore_mb": 36.5,
+      "download_folder_mb": 0.51
+    },
+    "timestamp": "2026-01-07T12:15:55",
+    "status": "CRITICAL",
+    "managed_by": {
+      "tactical_service_status": "Running",
+      "tactical_rmm": true
+    },
+    "configuration": {
+      "policies": {
+        "au_options": 1,
+        "scheduled_install_time": null,
+        "no_auto_update": null,
+        "scheduled_install_day": null
+      },
+      "use_wsus": false,
+      "wsus_server": null,
+      "au_options": 1,
+      "au_options_text": "Deaktiviert (RMM-verwaltet)"
+    }
+  }
+}

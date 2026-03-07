@@ -1,0 +1,162 @@
+{
+ "actions": [],
+ "creation": "2026-01-07 10:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "selected",
+  "hostname",
+  "monitoring_type",
+  "site_name",
+  "operating_system",
+  "local_ip",
+  "status",
+  "action",
+  "ad_matched",
+  "section_break_result",
+  "existing_it_object",
+  "import_result",
+  "import_message",
+  "section_break_hidden",
+  "agent_id",
+  "ad_guid",
+  "ad_account_status",
+  "ad_last_logon"
+ ],
+ "fields": [
+  {
+   "default": "0",
+   "fieldname": "selected",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "Select"
+  },
+  {
+   "fieldname": "agent_id",
+   "fieldtype": "Data",
+   "label": "Agent ID",
+   "read_only": 1
+  },
+  {
+   "fieldname": "hostname",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Hostname",
+   "read_only": 1
+  },
+  {
+   "fieldname": "monitoring_type",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Type",
+   "read_only": 1
+  },
+  {
+   "fieldname": "site_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Site",
+   "read_only": 1
+  },
+  {
+   "fieldname": "operating_system",
+   "fieldtype": "Data",
+   "label": "OS",
+   "read_only": 1
+  },
+  {
+   "fieldname": "status",
+   "fieldtype": "Data",
+   "label": "RMM Status",
+   "read_only": 1
+  },
+  {
+   "fieldname": "local_ip",
+   "fieldtype": "Data",
+   "label": "Local IP",
+   "read_only": 1
+  },
+  {
+   "fieldname": "action",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Action",
+   "options": "Create\nUpdate\nSkip",
+   "read_only": 1
+  },
+  {
+   "fieldname": "existing_it_object",
+   "fieldtype": "Link",
+   "label": "Existing IT Object",
+   "options": "IT Object",
+   "read_only": 1
+  },
+  {
+   "fieldname": "import_result",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Result",
+   "options": "\nPending\nSuccess\nFailed",
+   "read_only": 1
+  },
+  {
+   "fieldname": "import_message",
+   "fieldtype": "Small Text",
+   "label": "Message",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_result",
+   "fieldtype": "Section Break",
+   "label": "Import Result"
+  },
+  {
+   "fieldname": "section_break_hidden",
+   "fieldtype": "Section Break",
+   "hidden": 1
+  },
+  {
+   "default": "0",
+   "description": "AD-Match gefunden",
+   "fieldname": "ad_matched",
+   "fieldtype": "Check",
+   "in_list_view": 1,
+   "label": "AD Match",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ad_guid",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "AD GUID",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ad_account_status",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "AD Account Status",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ad_last_logon",
+   "fieldtype": "Data",
+   "hidden": 1,
+   "label": "AD Last Logon",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-01-22 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "MSP",
+ "name": "RMM Import Agent",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

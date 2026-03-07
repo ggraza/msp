@@ -12,6 +12,7 @@
   "customer_name",
   "tactical_rmm_tenant_caption",
   "tactical_rmm_site_name",
+  "rmm_instance",
   "generation_date",
   "introduction_text",
   "it_objects",
@@ -22,6 +23,7 @@
   "data_acquisition_section",
   "credentials_for_ldap_acquisistion",
   "domain_controller_for_ldap_acquisition",
+  "use_nat_address",
   "column_break_ydaj",
   "upn",
   "ip_address",
@@ -30,7 +32,15 @@
   "ad_computer_data_json",
   "ad_user_data_json",
   "output",
-  "windows_11_check_output"
+  "windows_11_check_output",
+  "windows_update_section",
+  "windows_update_compliance_score",
+  "windows_update_last_sync",
+  "windows_update_column_break",
+  "windows_update_summary_stats",
+  "windows_update_report_section",
+  "windows_update_report",
+  "windows_update_data_json"
  ],
  "fields": [
   {
@@ -102,6 +112,13 @@
    "label": "Tactical RMM Site Name"
   },
   {
+   "description": "Overrides the RMM Instance from the linked IT Landscape. Leave empty to inherit.",
+   "fieldname": "rmm_instance",
+   "fieldtype": "Link",
+   "label": "RMM Instance (Override)",
+   "options": "RMM Instance"
+  },
+  {
    "collapsible": 1,
    "fieldname": "json_data_section",
    "fieldtype": "Section Break",
@@ -140,6 +157,14 @@
    "options": "IT Object"
   },
   {
+   "default": "0",
+   "depends_on": "domain_controller_for_ldap_acquisition",
+   "description": "Use the 1:1 NAT address instead of the direct IP address for LDAP connection",
+   "fieldname": "use_nat_address",
+   "fieldtype": "Check",
+   "label": "Use 1:1 NAT Address"
+  },
+  {
    "fieldname": "column_break_ydaj",
    "fieldtype": "Column Break"
   },
@@ -163,6 +188,49 @@
    "fieldname": "windows_11_check_output",
    "fieldtype": "HTML",
    "label": "Windows 11 Check Output"
+  },
+  {
+   "fieldname": "windows_update_section",
+   "fieldtype": "Section Break",
+   "label": "Windows Update Status"
+  },
+  {
+   "fieldname": "windows_update_compliance_score",
+   "fieldtype": "Percent",
+   "label": "Compliance Score",
+   "read_only": 1
+  },
+  {
+   "fieldname": "windows_update_last_sync",
+   "fieldtype": "Datetime",
+   "label": "Letzter Update-Sync",
+   "read_only": 1
+  },
+  {
+   "fieldname": "windows_update_column_break",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "windows_update_summary_stats",
+   "fieldtype": "HTML",
+   "label": "Update-Zusammenfassung"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "windows_update_report_section",
+   "fieldtype": "Section Break",
+   "label": "Windows Update Details"
+  },
+  {
+   "fieldname": "windows_update_report",
+   "fieldtype": "HTML",
+   "label": "Windows Update Report"
+  },
+  {
+   "fieldname": "windows_update_data_json",
+   "fieldtype": "Long Text",
+   "hidden": 1,
+   "label": "Windows Update Data (JSON)"
   }
  ],
  "index_web_pages_for_search": 1,

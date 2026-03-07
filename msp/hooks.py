@@ -39,7 +39,12 @@ jinja = {
 # doctype_tree_js = {"doctype" : "public/js/doctype_tree.js"}
 # doctype_calendar_js = {"doctype" : "public/js/doctype_calendar.js"}
 
-doctype_js = {"Location" : "public/js/location.js"}
+doctype_js = {
+	"Location": "public/js/location.js",
+	"Quotation": "public/js/quotation.js",
+	"Purchase Receipt": "public/js/purchase_receipt.js",
+	"Sales Invoice": "public/js/sales_invoice.js"
+}
 
 # Home Pages
 # ----------
@@ -113,7 +118,10 @@ scheduler_events = {
         "*/5 * * * *": [
             "msp.tools.update_tickets_and_articles"
         ]
-    }
+    },
+    "hourly": [
+        "msp.msp.doctype.backupreport_instance.backupreport_instance.sync_all_instances"
+    ]
 }
 
 # scheduler_events = {

@@ -1,0 +1,56 @@
+{
+ "actions": [],
+ "creation": "2026-01-07 15:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "software_name",
+  "version",
+  "column_break_1",
+  "publisher",
+  "install_date"
+ ],
+ "fields": [
+  {
+   "fieldname": "software_name",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Software Name",
+   "reqd": 1
+  },
+  {
+   "fieldname": "version",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Version"
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "publisher",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Publisher"
+  },
+  {
+   "fieldname": "install_date",
+   "fieldtype": "Date",
+   "label": "Install Date"
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-01-07 15:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "MSP",
+ "name": "IT Object Software",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

@@ -1,0 +1,113 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "field:instance_name",
+ "creation": "2026-01-07 21:43:18.707431",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "instance_name",
+  "api_url",
+  "admin_key",
+  "enabled",
+  "column_break_sync",
+  "last_sync",
+  "last_backup_id",
+  "section_break_actions",
+  "sync_now"
+ ],
+ "fields": [
+  {
+   "fieldname": "instance_name",
+   "fieldtype": "Data",
+   "label": "Instance Name",
+   "reqd": 1,
+   "unique": 1
+  },
+  {
+   "fieldname": "api_url",
+   "fieldtype": "Data",
+   "label": "API URL",
+   "reqd": 1,
+   "description": "Base-URL der API (z.B. https://backupapi.itsdave.de/api/v1)"
+  },
+  {
+   "fieldname": "admin_key",
+   "fieldtype": "Password",
+   "label": "Admin Key",
+   "reqd": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "enabled",
+   "fieldtype": "Check",
+   "label": "Enabled"
+  },
+  {
+   "fieldname": "column_break_sync",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "last_sync",
+   "fieldtype": "Datetime",
+   "label": "Last Sync",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "last_backup_id",
+   "fieldtype": "Int",
+   "label": "Last Backup ID",
+   "read_only": 1
+  },
+  {
+   "fieldname": "section_break_actions",
+   "fieldtype": "Section Break",
+   "label": "Actions"
+  },
+  {
+   "fieldname": "sync_now",
+   "fieldtype": "Button",
+   "label": "Sync Now"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-01-07 21:43:27.700833",
+ "modified_by": "Administrator",
+ "module": "MSP",
+ "name": "Backupreport Instance",
+ "naming_rule": "By fieldname",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "read": 1,
+   "role": "Backup-Log-User"
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "read": 1,
+   "role": "Backup-Log-Admin",
+   "write": 1
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

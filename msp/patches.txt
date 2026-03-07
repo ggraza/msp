@@ -1,0 +1,1 @@
+msp.patches.migrate_rmm_settings

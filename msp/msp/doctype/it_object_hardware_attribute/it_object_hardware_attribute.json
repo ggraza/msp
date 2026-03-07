@@ -1,0 +1,52 @@
+{
+ "actions": [],
+ "creation": "2026-01-07 15:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "attribute_type",
+  "attribute_value",
+  "column_break_1",
+  "attribute_details"
+ ],
+ "fields": [
+  {
+   "fieldname": "attribute_type",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Type",
+   "options": "CPU\nRAM\nDisk\nGPU\nMainboard\nBIOS\nNetwork\nSerial Number\nModel\nManufacturer\nOther",
+   "reqd": 1
+  },
+  {
+   "fieldname": "attribute_value",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Value",
+   "reqd": 1
+  },
+  {
+   "fieldname": "column_break_1",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "attribute_details",
+   "fieldtype": "Small Text",
+   "in_list_view": 1,
+   "label": "Details"
+  }
+ ],
+ "index_web_pages_for_search": 0,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-01-07 15:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "MSP",
+ "name": "IT Object Hardware Attribute",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "track_changes": 1
+}

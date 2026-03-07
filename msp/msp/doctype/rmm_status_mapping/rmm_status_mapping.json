@@ -1,0 +1,40 @@
+{
+ "actions": [],
+ "creation": "2026-01-07 10:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "rmm_status",
+  "it_object_status"
+ ],
+ "fields": [
+  {
+   "fieldname": "rmm_status",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "RMM Status",
+   "reqd": 1
+  },
+  {
+   "fieldname": "it_object_status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "IT Object Status",
+   "options": "in Production\nImplementation\nin Maintenance\nfailed\nDecommissioned",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-01-07 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "MSP",
+ "name": "RMM Status Mapping",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

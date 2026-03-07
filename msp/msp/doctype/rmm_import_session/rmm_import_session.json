@@ -1,0 +1,270 @@
+{
+ "actions": [],
+ "autoname": "RMMIMP-.#####",
+ "creation": "2026-01-07 10:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "source_section",
+  "documentation",
+  "rmm_instance",
+  "it_landscape",
+  "column_break_source",
+  "filter_client",
+  "filter_site",
+  "status",
+  "include_ad_data",
+  "statistics_section",
+  "agents_total",
+  "agents_to_create",
+  "column_break_stats",
+  "agents_to_update",
+  "agents_skipped",
+  "ad_statistics_section",
+  "ad_matched_count",
+  "ad_only_count",
+  "ad_column_break_stats",
+  "rmm_only_count",
+  "agents_section",
+  "agent_selection",
+  "results_section",
+  "agents_created",
+  "agents_updated",
+  "column_break_results",
+  "agents_failed",
+  "import_log"
+ ],
+ "fields": [
+  {
+   "fieldname": "source_section",
+   "fieldtype": "Section Break",
+   "label": "Import Source"
+  },
+  {
+   "fieldname": "documentation",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "MSP Documentation",
+   "options": "MSP Documentation",
+   "read_only": 1
+  },
+  {
+   "fieldname": "rmm_instance",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "RMM Instance",
+   "options": "RMM Instance",
+   "read_only": 1
+  },
+  {
+   "fieldname": "it_landscape",
+   "fieldtype": "Link",
+   "in_list_view": 1,
+   "label": "IT Landscape",
+   "options": "IT Landscape",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_source",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "filter_client",
+   "fieldtype": "Data",
+   "label": "Client Filter",
+   "read_only": 1
+  },
+  {
+   "fieldname": "filter_site",
+   "fieldtype": "Data",
+   "label": "Site Filter",
+   "read_only": 1
+  },
+  {
+   "default": "Draft",
+   "fieldname": "status",
+   "fieldtype": "Select",
+   "in_list_view": 1,
+   "label": "Status",
+   "options": "Draft\nIn Progress\nCompleted\nFailed",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "description": "AD-Daten wurden bei diesem Import einbezogen",
+   "fieldname": "include_ad_data",
+   "fieldtype": "Check",
+   "label": "AD-Daten einbezogen",
+   "read_only": 1
+  },
+  {
+   "fieldname": "statistics_section",
+   "fieldtype": "Section Break",
+   "label": "Statistics"
+  },
+  {
+   "default": "0",
+   "fieldname": "agents_total",
+   "fieldtype": "Int",
+   "label": "Total Agents",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "agents_to_create",
+   "fieldtype": "Int",
+   "label": "To Create",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_stats",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "agents_to_update",
+   "fieldtype": "Int",
+   "label": "To Update",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "agents_skipped",
+   "fieldtype": "Int",
+   "label": "Skipped",
+   "read_only": 1
+  },
+  {
+   "depends_on": "include_ad_data",
+   "fieldname": "ad_statistics_section",
+   "fieldtype": "Section Break",
+   "label": "AD Statistics"
+  },
+  {
+   "default": "0",
+   "description": "Anzahl RMM-Agents mit AD-Match",
+   "fieldname": "ad_matched_count",
+   "fieldtype": "Int",
+   "label": "AD Matched",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "description": "Nur in AD vorhanden (nicht in RMM)",
+   "fieldname": "ad_only_count",
+   "fieldtype": "Int",
+   "label": "Only in AD",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ad_column_break_stats",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "description": "Nur in RMM vorhanden (nicht in AD)",
+   "fieldname": "rmm_only_count",
+   "fieldtype": "Int",
+   "label": "Only in RMM",
+   "read_only": 1
+  },
+  {
+   "fieldname": "agents_section",
+   "fieldtype": "Section Break",
+   "label": "Agent Selection"
+  },
+  {
+   "fieldname": "agent_selection",
+   "fieldtype": "Table",
+   "label": "Agents",
+   "options": "RMM Import Agent"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "results_section",
+   "fieldtype": "Section Break",
+   "label": "Import Results"
+  },
+  {
+   "default": "0",
+   "fieldname": "agents_created",
+   "fieldtype": "Int",
+   "label": "Created",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "agents_updated",
+   "fieldtype": "Int",
+   "label": "Updated",
+   "read_only": 1
+  },
+  {
+   "fieldname": "column_break_results",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "agents_failed",
+   "fieldtype": "Int",
+   "label": "Failed",
+   "read_only": 1
+  },
+  {
+   "fieldname": "import_log",
+   "fieldtype": "Long Text",
+   "label": "Import Log",
+   "read_only": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-01-22 10:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "MSP",
+ "name": "RMM Import Session",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "MSP Admin",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "MSP User",
+   "share": 1,
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": [],
+ "track_changes": 1
+}

@@ -29,16 +29,39 @@
   "network_config_section",
   "ip_adresses",
   "rmm_data_section",
+  "rmm_agent_id",
+  "rmm_instance",
+  "created_from_rmm",
+  "last_rmm_sync",
+  "rmm_column_break",
+  "rmm_local_ip",
+  "rmm_public_ip",
+  "rmm_operating_system",
+  "rmm_last_seen",
+  "rmm_last_user",
+  "rmm_patches_pending",
+  "rmm_needs_reboot",
+  "rmm_details_section",
   "hardware_attributes",
+  "rmm_software_section",
+  "installed_software",
+  "rmm_patches_section",
+  "installed_patches",
+  "rmm_raw_data_section",
   "rmm_specs",
   "rmm_software",
-  "created_from_rmm",
+  "ad_data_section",
+  "ad_object_guid",
+  "ad_distinguished_name",
+  "ad_column_break",
+  "ad_last_logon",
+  "ad_account_status",
+  "ad_operating_system",
+  "last_ad_sync",
   "external_links_section",
   "admin_interface_link",
   "monitoring_link",
   "oitc_host_uuid",
-  "rmm_agent_id",
-  "rmm_instance",
   "documentation_section",
   "visible_in_documentation",
   "documentation_text"
@@ -248,15 +271,153 @@
    "label": "Created From RMM"
   },
   {
+   "fieldname": "last_rmm_sync",
+   "fieldtype": "Datetime",
+   "label": "Last RMM Sync",
+   "read_only": 1
+  },
+  {
+   "fieldname": "rmm_column_break",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "rmm_local_ip",
+   "fieldtype": "Data",
+   "label": "RMM Local IP",
+   "read_only": 1
+  },
+  {
+   "fieldname": "rmm_public_ip",
+   "fieldtype": "Data",
+   "label": "RMM Public IP",
+   "read_only": 1
+  },
+  {
+   "fieldname": "rmm_operating_system",
+   "fieldtype": "Data",
+   "label": "RMM Operating System",
+   "read_only": 1
+  },
+  {
+   "fieldname": "rmm_last_seen",
+   "fieldtype": "Data",
+   "label": "RMM Last Seen",
+   "read_only": 1
+  },
+  {
+   "fieldname": "rmm_last_user",
+   "fieldtype": "Data",
+   "label": "RMM Last User",
+   "read_only": 1
+  },
+  {
+   "fieldname": "rmm_patches_pending",
+   "fieldtype": "Int",
+   "label": "Pending Patches",
+   "read_only": 1
+  },
+  {
+   "default": "0",
+   "fieldname": "rmm_needs_reboot",
+   "fieldtype": "Check",
+   "label": "Needs Reboot (RMM)",
+   "read_only": 1
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "rmm_details_section",
+   "fieldtype": "Section Break",
+   "label": "RMM Details"
+  },
+  {
    "fieldname": "hardware_attributes",
    "fieldtype": "Table",
    "label": "Hardware Attributes",
    "options": "IT Object Hardware Attribute"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "rmm_software_section",
+   "fieldtype": "Section Break",
+   "label": "Installed Software"
+  },
+  {
+   "fieldname": "installed_software",
+   "fieldtype": "Table",
+   "label": "Software",
+   "options": "IT Object Software"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "rmm_patches_section",
+   "fieldtype": "Section Break",
+   "label": "Windows Updates"
+  },
+  {
+   "fieldname": "installed_patches",
+   "fieldtype": "Table",
+   "label": "Patches",
+   "options": "IT Object Patch"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "rmm_raw_data_section",
+   "fieldtype": "Section Break",
+   "label": "RMM Raw Data (Legacy)"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "ad_data_section",
+   "fieldtype": "Section Break",
+   "label": "Active Directory Data"
+  },
+  {
+   "description": "Eindeutige AD GUID (fuer Matching)",
+   "fieldname": "ad_object_guid",
+   "fieldtype": "Data",
+   "label": "AD Object GUID",
+   "read_only": 1
+  },
+  {
+   "description": "Vollstaendiger OU-Pfad im AD",
+   "fieldname": "ad_distinguished_name",
+   "fieldtype": "Small Text",
+   "label": "AD Distinguished Name",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ad_column_break",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "ad_last_logon",
+   "fieldtype": "Datetime",
+   "label": "AD Last Logon",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ad_account_status",
+   "fieldtype": "Select",
+   "label": "AD Account Status",
+   "options": "\nEnabled\nDisabled",
+   "read_only": 1
+  },
+  {
+   "fieldname": "ad_operating_system",
+   "fieldtype": "Data",
+   "label": "AD Operating System",
+   "read_only": 1
+  },
+  {
+   "fieldname": "last_ad_sync",
+   "fieldtype": "Datetime",
+   "label": "Last AD Sync",
+   "read_only": 1
   }
  ],
  "image_field": "image",
  "links": [],
- "modified": "2025-07-31 16:07:20.612702",
+ "modified": "2026-01-22 10:00:00.000000",
  "modified_by": "Administrator",
  "module": "MSP",
  "name": "IT Object",

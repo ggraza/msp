@@ -1,0 +1,39 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "creation": "2026-01-07 22:00:00.000000",
+ "doctype": "DocType",
+ "editable_grid": 1,
+ "engine": "InnoDB",
+ "field_order": [
+  "host_id",
+  "hostname_pattern"
+ ],
+ "fields": [
+  {
+   "fieldname": "host_id",
+   "fieldtype": "Int",
+   "label": "Host ID",
+   "read_only": 1
+  },
+  {
+   "fieldname": "hostname_pattern",
+   "fieldtype": "Data",
+   "in_list_view": 1,
+   "label": "Hostname Pattern",
+   "reqd": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "istable": 1,
+ "links": [],
+ "modified": "2026-01-07 22:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "MSP",
+ "name": "Backupreport Token Host",
+ "owner": "Administrator",
+ "permissions": [],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

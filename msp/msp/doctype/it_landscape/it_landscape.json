@@ -22,7 +22,12 @@
   "monitoring_link",
   "ticket_system_link",
   "tactical_rmm_tenant_caption",
-  "rmm_instance"
+  "rmm_instance",
+  "default_ad_section",
+  "default_ad_credentials",
+  "default_ad_domain_controller",
+  "default_ad_column_break",
+  "default_ad_use_nat"
  ],
  "fields": [
   {
@@ -119,11 +124,42 @@
    "fieldtype": "Link",
    "label": "RMM Instance",
    "options": "RMM Instance"
+  },
+  {
+   "collapsible": 1,
+   "fieldname": "default_ad_section",
+   "fieldtype": "Section Break",
+   "label": "Default Active Directory"
+  },
+  {
+   "description": "Standard-Credentials fuer LDAP-Verbindungen. Wird bei automatischer MSP-Documentation-Erstellung uebernommen.",
+   "fieldname": "default_ad_credentials",
+   "fieldtype": "Link",
+   "label": "Default AD Credentials",
+   "options": "IT User Account"
+  },
+  {
+   "description": "Standard-Domain-Controller fuer LDAP-Verbindungen.",
+   "fieldname": "default_ad_domain_controller",
+   "fieldtype": "Link",
+   "label": "Default Domain Controller",
+   "options": "IT Object"
+  },
+  {
+   "fieldname": "default_ad_column_break",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "description": "1:1 NAT-Adresse fuer LDAP-Verbindung verwenden",
+   "fieldname": "default_ad_use_nat",
+   "fieldtype": "Check",
+   "label": "Use 1:1 NAT Address"
   }
  ],
  "image_field": "landscape_image",
  "links": [],
- "modified": "2023-06-08 23:20:35.777651",
+ "modified": "2026-01-22 10:00:00.000000",
  "modified_by": "Administrator",
  "module": "MSP",
  "name": "IT Landscape",

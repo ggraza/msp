@@ -1,0 +1,152 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "format:{backupreport_instance}-{token_name}",
+ "creation": "2026-01-07 22:00:00.000000",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "backupreport_instance",
+  "token_id",
+  "token_name",
+  "active",
+  "column_break_info",
+  "created_at",
+  "token_hash_preview",
+  "backup_count",
+  "section_break_token",
+  "token_value",
+  "token_not_available_html",
+  "section_break_hosts",
+  "allowed_hosts",
+  "section_break_actions"
+ ],
+ "fields": [
+  {
+   "fieldname": "backupreport_instance",
+   "fieldtype": "Link",
+   "label": "Backupreport Instance",
+   "options": "Backupreport Instance",
+   "reqd": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "token_id",
+   "fieldtype": "Int",
+   "label": "Token ID",
+   "read_only": 1
+  },
+  {
+   "fieldname": "token_name",
+   "fieldtype": "Data",
+   "label": "Token Name",
+   "reqd": 1,
+   "in_list_view": 1
+  },
+  {
+   "default": "1",
+   "fieldname": "active",
+   "fieldtype": "Check",
+   "label": "Active",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "column_break_info",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "created_at",
+   "fieldtype": "Datetime",
+   "label": "Created At",
+   "read_only": 1
+  },
+  {
+   "fieldname": "token_hash_preview",
+   "fieldtype": "Data",
+   "label": "Token Hash Preview",
+   "read_only": 1
+  },
+  {
+   "fieldname": "backup_count",
+   "fieldtype": "Int",
+   "label": "Backup Count",
+   "read_only": 1,
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "section_break_token",
+   "fieldtype": "Section Break",
+   "label": "Token"
+  },
+  {
+   "fieldname": "token_value",
+   "fieldtype": "Password",
+   "label": "Token Value",
+   "description": "Der Token-Wert (nur verfügbar wenn lokal erstellt)"
+  },
+  {
+   "fieldname": "token_not_available_html",
+   "fieldtype": "HTML",
+   "options": "<div class=\"alert alert-warning\">Token-Wert nicht verfügbar. Dieser Token wurde extern erstellt oder vor der Synchronisierung generiert.</div>",
+   "depends_on": "eval:!doc.token_value && doc.token_id"
+  },
+  {
+   "fieldname": "section_break_hosts",
+   "fieldtype": "Section Break",
+   "label": "Allowed Hosts"
+  },
+  {
+   "fieldname": "allowed_hosts",
+   "fieldtype": "Table",
+   "label": "Allowed Hosts",
+   "options": "Backupreport Token Host"
+  },
+  {
+   "fieldname": "section_break_actions",
+   "fieldtype": "Section Break",
+   "label": "Actions",
+   "collapsible": 1,
+   "hidden": 1
+  }
+ ],
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-01-07 22:00:00.000000",
+ "modified_by": "Administrator",
+ "module": "MSP",
+ "name": "Backupreport Token",
+ "naming_rule": "Expression",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "create": 1,
+   "read": 1,
+   "role": "Backup-Log-User",
+   "write": 1
+  },
+  {
+   "create": 1,
+   "delete": 1,
+   "read": 1,
+   "role": "Backup-Log-Admin",
+   "write": 1
+  }
+ ],
+ "sort_field": "modified",
+ "sort_order": "DESC",
+ "states": []
+}

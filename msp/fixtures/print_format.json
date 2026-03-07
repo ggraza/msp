@@ -25,5 +25,32 @@
   "raw_printing": 0,
   "show_section_headings": 1,
   "standard": "No"
+ },
+ {
+  "absolute_value": 0,
+  "align_labels_right": 0,
+  "css": ".print-format { page-width: 62mm; page-height: 80mm; margin-top: 3mm; margin-bottom: 3mm; margin-left: 3mm; margin-right: 3mm; } .print-format table, .print-format tr, .print-format td, .print-format div, .print-format p { font-family: Monospace; line-height: 100%; vertical-align: middle; }",
+  "custom_format": 1,
+  "default_print_language": null,
+  "disabled": 0,
+  "doc_type": "Item",
+  "docstatus": 0,
+  "doctype": "Print Format",
+  "font": "Default",
+  "format_data": null,
+  "html": "{% set count_data = frappe.flags.inventory_count_data %}\n<p style=\"font-size:100%;\" class=\"text-center\">\n<img id=\"qr\" width=\"66%\" src=\"https://api.qrserver.com/v1/create-qr-code/?size=300x300&data={{ doc.name }}&format=svg&color=000000\">\n</p>\n<p style=\"font-size:150%;\" class=\"text-center\">{{ doc.name }}</p>\n<p style=\"font-size:100%;\" class=\"text-center\">{{ doc.item_name }}</p>\n{% if count_data %}\n<p style=\"font-size:200%;\" class=\"text-center\"><b>Gezählt: {{ count_data.counted_qty }}</b></p>\n<p style=\"font-size:80%;\" class=\"text-center\">{{ count_data.counted_at }}</p>\n{% endif %}",
+  "line_breaks": 0,
+  "modified": "2025-01-01 00:00:00.000000",
+  "module": "MSP",
+  "name": "Inventory Count Label",
+  "parent": null,
+  "parentfield": null,
+  "parenttype": null,
+  "print_format_builder": 0,
+  "print_format_type": "Jinja",
+  "raw_commands": null,
+  "raw_printing": 0,
+  "show_section_headings": 0,
+  "standard": "No"
  }
 ]

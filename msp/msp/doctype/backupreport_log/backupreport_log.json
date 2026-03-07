@@ -1,0 +1,190 @@
+{
+ "actions": [],
+ "allow_rename": 1,
+ "autoname": "BKLOG-.#####",
+ "creation": "2026-01-07 21:30:43.716073",
+ "doctype": "DocType",
+ "engine": "InnoDB",
+ "field_order": [
+  "backupreport_instance",
+  "backup_id",
+  "hostname",
+  "backup_type",
+  "column_break_info",
+  "log_type",
+  "token_name",
+  "backup_date",
+  "size",
+  "section_break_visualization",
+  "visualization_html",
+  "section_break_json",
+  "success",
+  "file_size_mb",
+  "duration_seconds",
+  "column_break_json",
+  "errors",
+  "warnings",
+  "section_break_content",
+  "log_content"
+ ],
+ "fields": [
+  {
+   "fieldname": "backupreport_instance",
+   "fieldtype": "Link",
+   "label": "Backupreport Instance",
+   "options": "Backupreport Instance",
+   "reqd": 1,
+   "in_list_view": 1,
+   "in_standard_filter": 1,
+   "bold": 1
+  },
+  {
+   "fieldname": "backup_id",
+   "fieldtype": "Int",
+   "label": "Backup ID",
+   "reqd": 1
+  },
+  {
+   "fieldname": "hostname",
+   "fieldtype": "Data",
+   "label": "Hostname",
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "backup_type",
+   "fieldtype": "Data",
+   "label": "Backup Type",
+   "in_list_view": 1,
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "column_break_info",
+   "fieldtype": "Column Break"
+  },
+  {
+   "fieldname": "log_type",
+   "fieldtype": "Data",
+   "label": "Log Type",
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "token_name",
+   "fieldtype": "Data",
+   "label": "Token Name",
+   "in_standard_filter": 1
+  },
+  {
+   "fieldname": "backup_date",
+   "fieldtype": "Datetime",
+   "label": "Backup Date",
+   "in_list_view": 1
+  },
+  {
+   "fieldname": "size",
+   "fieldtype": "Float",
+   "label": "Size (Bytes)"
+  },
+  {
+   "fieldname": "section_break_visualization",
+   "fieldtype": "Section Break",
+   "label": "Visualization"
+  },
+  {
+   "fieldname": "visualization_html",
+   "fieldtype": "HTML",
+   "label": "Visualization"
+  },
+  {
+   "fieldname": "section_break_json",
+   "fieldtype": "Section Break",
+   "label": "JSON Details",
+   "collapsible": 1,
+   "depends_on": "eval:doc.log_type=='json'"
+  },
+  {
+   "default": "0",
+   "fieldname": "success",
+   "fieldtype": "Check",
+   "label": "Success"
+  },
+  {
+   "fieldname": "file_size_mb",
+   "fieldtype": "Float",
+   "label": "File Size (MB)"
+  },
+  {
+   "fieldname": "duration_seconds",
+   "fieldtype": "Float",
+   "label": "Duration (Seconds)"
+  },
+  {
+   "fieldname": "column_break_json",
+   "fieldtype": "Column Break"
+  },
+  {
+   "default": "0",
+   "fieldname": "errors",
+   "fieldtype": "Int",
+   "label": "Errors"
+  },
+  {
+   "default": "0",
+   "fieldname": "warnings",
+   "fieldtype": "Int",
+   "label": "Warnings"
+  },
+  {
+   "fieldname": "section_break_content",
+   "fieldtype": "Section Break",
+   "label": "Log Content",
+   "collapsible": 1
+  },
+  {
+   "fieldname": "log_content",
+   "fieldtype": "Long Text",
+   "label": "Log Content"
+  }
+ ],
+ "grid_page_length": 50,
+ "index_web_pages_for_search": 1,
+ "links": [],
+ "modified": "2026-01-07 21:30:57.360982",
+ "modified_by": "Administrator",
+ "module": "MSP",
+ "name": "Backupreport Log",
+ "naming_rule": "Expression (old style)",
+ "owner": "Administrator",
+ "permissions": [
+  {
+   "create": 1,
+   "delete": 1,
+   "email": 1,
+   "export": 1,
+   "print": 1,
+   "read": 1,
+   "report": 1,
+   "role": "System Manager",
+   "share": 1,
+   "write": 1
+  },
+  {
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Backup-Log-User"
+  },
+  {
+   "delete": 1,
+   "export": 1,
+   "read": 1,
+   "report": 1,
+   "role": "Backup-Log-Admin"
+  }
+ ],
+ "row_format": "Dynamic",
+ "rows_threshold_for_grid_search": 20,
+ "sort_field": "backup_date",
+ "sort_order": "DESC",
+ "states": []
+}

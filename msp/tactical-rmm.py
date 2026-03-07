@@ -1,5 +1,4 @@
 import frappe
-from frappe.utils.password import get_decrypted_password
 
 import requests
 import json
@@ -10,15 +9,78 @@ import os
 from ldap3 import Server, Connection, ALL, NTLM, SUBTREE
 from .tools import render_card_html, render_single_card
 
+
+def _get_rmm_credentials(rmm_instance_name=None, documentation_name=None):
+    """
+    Resolves RMM Instance credentials with priority:
+    1. Explicit rmm_instance_name
+    2. MSP Documentation.rmm_instance (override)
+    3. MSP Documentation.landscape.rmm_instance (inherited)
+
+    Args:
+        rmm_instance_name (str, optional): Explicit RMM Instance name
+        documentation_name (str, optional): MSP Documentation to resolve from
+
+    Returns:
+        tuple: (api_url: str, headers: dict, verify_ssl: bool)
+
+    Raises:
+        frappe.ValidationError: If no RMM Instance can be resolved
+    """
+    resolved_instance = None
+
+    if rmm_instance_name:
+        resolved_instance = rmm_instance_name
+    elif documentation_name:
+        doc = frappe.get_doc("MSP Documentation", documentation_name)
+        if doc.rmm_instance:
+            resolved_instance = doc.rmm_instance
+        elif doc.landscape:
+            landscape = frappe.get_doc("IT Landscape", doc.landscape)
+            if landscape.rmm_instance:
+                resolved_instance = landscape.rmm_instance
+            else:
+                frappe.throw(f"No RMM Instance set on IT Landscape '{doc.landscape}'")
+        else:
+            frappe.throw("No landscape set and no RMM Instance override on MSP Documentation")
+    else:
+        frappe.throw("Either rmm_instance or documentation_name must be provided")
+
+    rmm_doc = frappe.get_doc("RMM Instance", resolved_instance)
+    return rmm_doc.get_api_credentials()
+
+
 @frappe.whitelist()
-def get_agents(it_landscape, rmm_instance = None, tactical_rmm_tenant_caption = None):
-    pass
+def get_agents(it_landscape, rmm_instance=None, tactical_rmm_tenant_caption=None):
+    """
+    Fetches agents from RMM for an IT Landscape.
+
+    Args:
+        it_landscape (str): IT Landscape document name
+        rmm_instance (str, optional): RMM Instance name (falls back to landscape's rmm_instance)
+        tactical_rmm_tenant_caption (str, optional): Filter by client name in RMM
+
+    Returns:
+        str: Success message with agent count
+    """
+    if not rmm_instance:
+        landscape_doc = frappe.get_doc("IT Landscape", it_landscape)
+        rmm_instance = landscape_doc.rmm_instance
+        if not rmm_instance:
+            frappe.throw(f"No RMM Instance set on IT Landscape '{it_landscape}'")
+
+    agents = get_all_agents(rmm_instance_name=rmm_instance)
+
+    if tactical_rmm_tenant_caption:
+        agents = [a for a in agents if a.get("client_name") == tactical_rmm_tenant_caption]
+
+    return f"Found {len(agents)} agents"
                             
 
 @frappe.whitelist()
-def get_relevant_software_for_agent(agent_id):
+def get_relevant_software_for_agent(agent_id, rmm_instance_name=None, documentation_name=None):
     found_software = []
-    software_for_agent = get_software_for_agent(agent_id)
+    software_for_agent = get_software_for_agent(agent_id, rmm_instance_name=rmm_instance_name, documentation_name=documentation_name)
     if "software" in software_for_agent:
         for s in software_for_agent["software"]:
             result = _match_software(s)
@@ -36,25 +98,34 @@ def _match_software(rmm_software_elememt):
     return None
 
 @frappe.whitelist()
-def search_office(agents = None):
+def search_office(agents=None, documentation_name=None):
+    """
+    Searches for Office installations across agents.
+
+    Args:
+        agents (list, optional): Pre-fetched list of agents
+        documentation_name (str, optional): MSP Documentation to resolve RMM Instance from
+    """
     points_for_found_strings = {}
     agents_with_office = []
 
     if not agents:
-        agents = get_all_agents()
+        if not documentation_name:
+            frappe.throw("documentation_name is required when agents list is not provided")
+        agents = get_all_agents(documentation_name=documentation_name)
     todo = len(agents)
     count = 0
     for agent in agents:
         found_office = False
         count = count + 1
         print("verarbeite agent " + str(count) + " von " + str(todo))
-        software_for_agent = get_software_for_agent(agent["agent_id"])
+        software_for_agent = get_software_for_agent(agent["agent_id"], documentation_name=documentation_name)
         if "software" in software_for_agent:
             for s in software_for_agent["software"]:
                 if (s["name"].lower().startswith("Microsoft Office".lower())):
                     found_string = s["name"]
                     found_office = True
-                    
+
                     if found_string in points_for_found_strings.keys():
                         points_for_found_strings[found_string] = points_for_found_strings[found_string] + 1
                     else:
@@ -63,19 +134,20 @@ def search_office(agents = None):
                 agents_with_office.append(agent)
         else:
             pass
-       
+
 
 
     print(points_for_found_strings)
     #print(len(agents_with_office))
-    search_for_office_patches(agents_with_office)
+    search_for_office_patches(agents_with_office, documentation_name=documentation_name)
     print(points_for_found_strings)
 
-def search_for_office_patches(agents_with_office):
+
+def search_for_office_patches(agents_with_office, documentation_name=None):
     count = 0
     for agent in agents_with_office:
         found_patches_for_office = False
-        patches = get_patches_for_agent(agent["agent_id"])
+        patches = get_patches_for_agent(agent["agent_id"], documentation_name=documentation_name)
         for patch in patches:
             if "office".lower() in patch["title"].lower():
                 found_patches_for_office = True
@@ -96,7 +168,7 @@ def get_agents_pretty(documentation):
 
     client_name = documentation_doc.tactical_rmm_tenant_caption
     site_name = documentation_doc.tactical_rmm_site_name
-    agents = get_all_agents()
+    agents = get_all_agents(documentation_name=documentation)
     
     # Filter and organize agents
     agent_list = []
@@ -159,58 +231,71 @@ def get_agents_pretty(documentation):
     return agent_list
 
 
-def get_all_agents():
-    settings = frappe.get_single("MSP Settings")
-    if not settings.api_key:
-        frappe.throw("API Key is missing")
-    if not settings.api_url:
-        frappe.throw("API URL is missing")
-    
-    API = settings.api_url
-    HEADERS = {
-        "Content-Type": "application/json",
-        "X-API-KEY": get_decrypted_password("MSP Settings", "MSP Settings", "api_key", raise_exception=True),
-    }
+def get_all_agents(rmm_instance_name=None, documentation_name=None):
+    """
+    Fetches all agents from a Tactical RMM instance.
 
-    agents = requests.get(f"{API}/agents/?detail=true", headers=HEADERS)
+    Args:
+        rmm_instance_name (str, optional): Explicit RMM Instance name
+        documentation_name (str, optional): MSP Documentation to resolve RMM Instance from
+
+    Returns:
+        list: List of agent dictionaries from RMM API
+    """
+    api_url, headers, verify_ssl = _get_rmm_credentials(
+        rmm_instance_name=rmm_instance_name,
+        documentation_name=documentation_name
+    )
+
+    agents = requests.get(f"{api_url}/agents/?detail=true", headers=headers, verify=verify_ssl)
     return agents.json()
 
-def get_software_for_agent(agent_id=None):
-    settings = frappe.get_single("MSP Settings")
-    if not settings.api_key:
-        frappe.throw("API Key is missing")
-    if not settings.api_url:
-        frappe.throw("API URL is missing")
-    
-    API = settings.api_url
-    HEADERS = {
-        "Content-Type": "application/json",
-        "X-API-KEY": get_decrypted_password("MSP Settings", "MSP Settings", "api_key", raise_exception=True),
-    }
 
+def get_software_for_agent(agent_id, rmm_instance_name=None, documentation_name=None):
+    """
+    Fetches installed software for a specific agent.
+
+    Args:
+        agent_id (str): The Tactical RMM agent ID
+        rmm_instance_name (str, optional): Explicit RMM Instance name
+        documentation_name (str, optional): MSP Documentation to resolve RMM Instance from
+
+    Returns:
+        dict: Software information from RMM API
+    """
     if not agent_id:
         frappe.throw("Agent ID fehlt")
 
-    software_for_agent = requests.get(f"{API}/software/{agent_id}/", headers=HEADERS)
+    api_url, headers, verify_ssl = _get_rmm_credentials(
+        rmm_instance_name=rmm_instance_name,
+        documentation_name=documentation_name
+    )
+
+    software_for_agent = requests.get(f"{api_url}/software/{agent_id}/", headers=headers, verify=verify_ssl)
     return software_for_agent.json()
 
-def get_patches_for_agent(agent_id=None):
-    settings = frappe.get_single("MSP Settings")
-    if not settings.api_key:
-        frappe.throw("API Key is missing")
-    if not settings.api_url:
-        frappe.throw("API URL is missing")
-    
-    API = settings.api_url
-    HEADERS = {
-        "Content-Type": "application/json",
-        "X-API-KEY": get_decrypted_password("MSP Settings", "MSP Settings", "api_key", raise_exception=True),
-    }
 
+def get_patches_for_agent(agent_id, rmm_instance_name=None, documentation_name=None):
+    """
+    Fetches Windows patches for a specific agent.
+
+    Args:
+        agent_id (str): The Tactical RMM agent ID
+        rmm_instance_name (str, optional): Explicit RMM Instance name
+        documentation_name (str, optional): MSP Documentation to resolve RMM Instance from
+
+    Returns:
+        list: Patch information from RMM API
+    """
     if not agent_id:
         frappe.throw("Agent ID fehlt")
 
-    patches_for_agent = requests.get(f"{API}/winupdate/{agent_id}/", headers=HEADERS)
+    api_url, headers, verify_ssl = _get_rmm_credentials(
+        rmm_instance_name=rmm_instance_name,
+        documentation_name=documentation_name
+    )
+
+    patches_for_agent = requests.get(f"{api_url}/winupdate/{agent_id}/", headers=headers, verify=verify_ssl)
     return patches_for_agent.json()
 
 
@@ -275,9 +360,9 @@ def fetch_and_store_all_agent_data(documentation_name):
         
         client_name = documentation_doc.tactical_rmm_tenant_caption
         site_name = documentation_doc.tactical_rmm_site_name
-        
+
         # Alle Agent-Daten vom RMM holen
-        all_agents = get_all_agents()
+        all_agents = get_all_agents(documentation_name=documentation_name)
         
         # Nach Mandant und optional nach Site filtern
         filtered_agents = []
@@ -312,6 +397,574 @@ def fetch_and_store_all_agent_data(documentation_name):
     except Exception as e:
         frappe.log_error(f"Fehler beim Speichern der RMM-Daten: {str(e)}", "fetch_and_store_all_agent_data")
         frappe.throw(f"Fehler beim Speichern der RMM-Daten: {str(e)}")
+
+
+# ==================== Windows Update Reporting ====================
+
+def _calculate_compliance_score(agents_with_patches):
+    """
+    Berechnet den Compliance-Score basierend auf installierten vs. ausstehenden Updates.
+
+    Gewichtung:
+    - Critical: 4.0
+    - Important: 3.0
+    - Moderate: 2.0
+    - Low/Unspecified: 1.0
+
+    Args:
+        agents_with_patches (list): Liste von Agents mit ihren Patch-Daten
+
+    Returns:
+        dict: {
+            "overall_score": float,
+            "status": "green"|"yellow"|"red",
+            "by_site": {site_name: {"score": float, "status": str}},
+            "totals": {"installed": int, "pending": int, "failed": int, "total": int}
+        }
+    """
+    weights = {
+        "Critical": 4.0,
+        "Important": 3.0,
+        "Moderate": 2.0,
+        "Low": 1.0,
+        "Unspecified": 1.0
+    }
+
+    total_weight = 0
+    installed_weight = 0
+    totals = {"installed": 0, "pending": 0, "failed": 0, "total": 0}
+
+    # Aggregation nach Site
+    site_data = {}
+
+    for agent in agents_with_patches:
+        site_name = agent.get("site_name", "Unknown")
+        if site_name not in site_data:
+            site_data[site_name] = {
+                "total_weight": 0,
+                "installed_weight": 0,
+                "installed": 0,
+                "pending": 0,
+                "failed": 0,
+                "total": 0,
+                "agents": 0
+            }
+        site_data[site_name]["agents"] += 1
+
+        for patch in agent.get("patches", []):
+            severity = patch.get("severity", "Unspecified")
+            weight = weights.get(severity, 1.0)
+            is_installed = patch.get("installed", False)
+            result = patch.get("result", "pending")
+
+            total_weight += weight
+            site_data[site_name]["total_weight"] += weight
+            totals["total"] += 1
+            site_data[site_name]["total"] += 1
+
+            if is_installed:
+                installed_weight += weight
+                site_data[site_name]["installed_weight"] += weight
+                totals["installed"] += 1
+                site_data[site_name]["installed"] += 1
+            elif result == "failed":
+                totals["failed"] += 1
+                site_data[site_name]["failed"] += 1
+            else:
+                totals["pending"] += 1
+                site_data[site_name]["pending"] += 1
+
+    # Gesamt-Score berechnen
+    overall_score = (installed_weight / total_weight * 100) if total_weight > 0 else 100.0
+
+    def get_status(score):
+        if score >= 90:
+            return "green"
+        elif score >= 70:
+            return "yellow"
+        else:
+            return "red"
+
+    # Site-Scores berechnen
+    by_site = {}
+    for site_name, data in site_data.items():
+        site_score = (data["installed_weight"] / data["total_weight"] * 100) if data["total_weight"] > 0 else 100.0
+        by_site[site_name] = {
+            "score": round(site_score, 1),
+            "status": get_status(site_score),
+            "installed": data["installed"],
+            "pending": data["pending"],
+            "failed": data["failed"],
+            "total": data["total"],
+            "agents": data["agents"]
+        }
+
+    return {
+        "overall_score": round(overall_score, 1),
+        "status": get_status(overall_score),
+        "by_site": by_site,
+        "totals": totals
+    }
+
+
+def _generate_windows_update_html(compliance_data, agents_with_patches):
+    """
+    Generiert HTML-Report für Windows Update Status.
+
+    Args:
+        compliance_data (dict): Ergebnis von _calculate_compliance_score
+        agents_with_patches (list): Liste von Agents mit Patch-Daten
+
+    Returns:
+        str: HTML-String mit dem Report
+    """
+    status_colors = {
+        "green": "#28a745",
+        "yellow": "#ffc107",
+        "red": "#dc3545"
+    }
+
+    status_labels = {
+        "green": "Gut",
+        "yellow": "Warnung",
+        "red": "Kritisch"
+    }
+
+    totals = compliance_data["totals"]
+    overall_status = compliance_data["status"]
+    overall_score = compliance_data["overall_score"]
+
+    # CSS Styles
+    html = """
+    <style>
+        .wu-report { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        .wu-header { display: flex; gap: 20px; margin-bottom: 20px; flex-wrap: wrap; }
+        .wu-score-card {
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            min-width: 120px;
+        }
+        .wu-score-card.green { background: #d4edda; border: 2px solid #28a745; }
+        .wu-score-card.yellow { background: #fff3cd; border: 2px solid #ffc107; }
+        .wu-score-card.red { background: #f8d7da; border: 2px solid #dc3545; }
+        .wu-score-value { font-size: 2em; font-weight: bold; }
+        .wu-score-label { font-size: 0.9em; color: #666; }
+        .wu-stats { display: flex; gap: 15px; flex-wrap: wrap; }
+        .wu-stat {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 6px;
+            text-align: center;
+            min-width: 100px;
+        }
+        .wu-stat.warning { background: #fff3cd; }
+        .wu-stat.danger { background: #f8d7da; }
+        .wu-stat-count { font-size: 1.5em; font-weight: bold; }
+        .wu-stat-label { font-size: 0.85em; color: #666; }
+        .wu-table { width: 100%; border-collapse: collapse; margin-top: 15px; }
+        .wu-table th, .wu-table td {
+            padding: 10px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .wu-table th { background: #f8f9fa; font-weight: 600; }
+        .wu-table tr:hover { background: #f8f9fa; }
+        .wu-badge {
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.85em;
+            font-weight: 500;
+        }
+        .wu-badge.green { background: #d4edda; color: #155724; }
+        .wu-badge.yellow { background: #fff3cd; color: #856404; }
+        .wu-badge.red { background: #f8d7da; color: #721c24; }
+        .wu-section { margin-top: 25px; }
+        .wu-section h4 { margin-bottom: 10px; color: #333; }
+        .wu-details { margin-left: 20px; margin-top: 10px; }
+        .wu-collapsible { cursor: pointer; }
+        .wu-collapsible:hover { background: #e9ecef; }
+        .wu-critical-list { max-height: 300px; overflow-y: auto; }
+    </style>
+    """
+
+    # Header mit Score und Zusammenfassung
+    html += f"""
+    <div class="wu-report">
+        <div class="wu-header">
+            <div class="wu-score-card {overall_status}">
+                <div class="wu-score-value">{overall_score}%</div>
+                <div class="wu-score-label">Compliance Score</div>
+                <div class="wu-score-label" style="font-weight: bold; color: {status_colors[overall_status]};">
+                    {status_labels[overall_status]}
+                </div>
+            </div>
+            <div class="wu-stats">
+                <div class="wu-stat">
+                    <div class="wu-stat-count">{totals['installed']}</div>
+                    <div class="wu-stat-label">Installiert</div>
+                </div>
+                <div class="wu-stat warning">
+                    <div class="wu-stat-count">{totals['pending']}</div>
+                    <div class="wu-stat-label">Ausstehend</div>
+                </div>
+                <div class="wu-stat danger">
+                    <div class="wu-stat-count">{totals['failed']}</div>
+                    <div class="wu-stat-label">Fehlgeschlagen</div>
+                </div>
+                <div class="wu-stat">
+                    <div class="wu-stat-count">{len(agents_with_patches)}</div>
+                    <div class="wu-stat-label">Computer</div>
+                </div>
+            </div>
+        </div>
+    """
+
+    # Site-Übersicht
+    html += """
+        <div class="wu-section">
+            <h4>Übersicht nach Standort</h4>
+            <table class="wu-table">
+                <thead>
+                    <tr>
+                        <th>Standort</th>
+                        <th>Computer</th>
+                        <th>Compliance</th>
+                        <th>Installiert</th>
+                        <th>Ausstehend</th>
+                        <th>Fehlgeschlagen</th>
+                    </tr>
+                </thead>
+                <tbody>
+    """
+
+    for site_name, site_info in sorted(compliance_data["by_site"].items()):
+        html += f"""
+                    <tr>
+                        <td><strong>{site_name}</strong></td>
+                        <td>{site_info['agents']}</td>
+                        <td><span class="wu-badge {site_info['status']}">{site_info['score']}%</span></td>
+                        <td>{site_info['installed']}</td>
+                        <td>{site_info['pending']}</td>
+                        <td>{site_info['failed']}</td>
+                    </tr>
+        """
+
+    html += """
+                </tbody>
+            </table>
+        </div>
+    """
+
+    # Computer-Details
+    html += """
+        <div class="wu-section">
+            <h4>Details pro Computer</h4>
+            <table class="wu-table">
+                <thead>
+                    <tr>
+                        <th>Computer</th>
+                        <th>Standort</th>
+                        <th>Betriebssystem</th>
+                        <th>Ausstehend</th>
+                        <th>Kritisch</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+    """
+
+    for agent in sorted(agents_with_patches, key=lambda x: x.get("site_name", "")):
+        patches = agent.get("patches", [])
+        pending = len([p for p in patches if not p.get("installed", False) and p.get("result") != "failed"])
+        critical_pending = len([p for p in patches if not p.get("installed", False) and p.get("severity") == "Critical"])
+
+        if critical_pending > 0:
+            status_class = "red"
+            status_text = "Kritisch"
+        elif pending > 0:
+            status_class = "yellow"
+            status_text = "Ausstehend"
+        else:
+            status_class = "green"
+            status_text = "Aktuell"
+
+        html += f"""
+                    <tr>
+                        <td><strong>{agent.get('hostname', 'Unknown')}</strong></td>
+                        <td>{agent.get('site_name', 'Unknown')}</td>
+                        <td>{agent.get('operating_system', 'Unknown')}</td>
+                        <td>{pending}</td>
+                        <td>{critical_pending}</td>
+                        <td><span class="wu-badge {status_class}">{status_text}</span></td>
+                    </tr>
+        """
+
+    html += """
+                </tbody>
+            </table>
+        </div>
+    """
+
+    # Kritische ausstehende Updates
+    critical_patches = []
+    for agent in agents_with_patches:
+        for patch in agent.get("patches", []):
+            if not patch.get("installed", False) and patch.get("severity") in ["Critical", "Important"]:
+                critical_patches.append({
+                    "hostname": agent.get("hostname"),
+                    "kb": patch.get("kb", ""),
+                    "title": patch.get("title", ""),
+                    "severity": patch.get("severity", ""),
+                    "category": patch.get("category", "")
+                })
+
+    if critical_patches:
+        html += """
+        <div class="wu-section">
+            <h4>Ausstehende kritische und wichtige Updates</h4>
+            <div class="wu-critical-list">
+                <table class="wu-table">
+                    <thead>
+                        <tr>
+                            <th>Computer</th>
+                            <th>KB</th>
+                            <th>Titel</th>
+                            <th>Schweregrad</th>
+                            <th>Kategorie</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+        """
+
+        for patch in sorted(critical_patches, key=lambda x: (0 if x["severity"] == "Critical" else 1, x["hostname"])):
+            severity_class = "red" if patch["severity"] == "Critical" else "yellow"
+            html += f"""
+                        <tr>
+                            <td>{patch['hostname']}</td>
+                            <td>{patch['kb']}</td>
+                            <td>{patch['title'][:80]}{'...' if len(patch['title']) > 80 else ''}</td>
+                            <td><span class="wu-badge {severity_class}">{patch['severity']}</span></td>
+                            <td>{patch['category']}</td>
+                        </tr>
+            """
+
+        html += """
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        """
+
+    html += "</div>"
+
+    return html
+
+
+def _generate_summary_stats_html(compliance_data):
+    """
+    Generiert kompakte Zusammenfassungs-HTML für das Summary-Feld.
+    """
+    totals = compliance_data["totals"]
+    status = compliance_data["status"]
+
+    status_text = {
+        "green": "Alle Systeme aktuell",
+        "yellow": "Updates ausstehend",
+        "red": "Kritische Updates fehlen"
+    }
+
+    return f"""
+    <div style="display: flex; gap: 10px; align-items: center;">
+        <span style="padding: 3px 8px; border-radius: 4px; font-size: 0.9em;
+            background: {'#d4edda' if status == 'green' else '#fff3cd' if status == 'yellow' else '#f8d7da'};
+            color: {'#155724' if status == 'green' else '#856404' if status == 'yellow' else '#721c24'};">
+            {status_text[status]}
+        </span>
+        <span style="color: #666; font-size: 0.9em;">
+            {totals['installed']} installiert | {totals['pending']} ausstehend | {totals['failed']} fehlgeschlagen
+        </span>
+    </div>
+    """
+
+
+@frappe.whitelist()
+def fetch_windows_update_data(documentation_name):
+    """
+    Holt Windows Update Daten für alle Agents eines Mandanten/Site und generiert den Report.
+
+    Args:
+        documentation_name (str): Name der MSP Documentation
+
+    Returns:
+        dict: Erfolgsmeldung mit Compliance-Score und Anzahl der Agents
+    """
+    try:
+        documentation_doc = frappe.get_doc("MSP Documentation", documentation_name)
+
+        if not documentation_doc.tactical_rmm_tenant_caption:
+            frappe.throw("Tenant Caption fehlt in der MSP Documentation")
+
+        client_name = documentation_doc.tactical_rmm_tenant_caption
+        site_name = documentation_doc.tactical_rmm_site_name
+
+        # Alle Agents vom RMM holen
+        all_agents = get_all_agents(documentation_name=documentation_name)
+
+        # Nach Mandant und optional nach Site filtern
+        filtered_agents = [
+            agent for agent in all_agents
+            if agent["client_name"] == client_name and (not site_name or agent["site_name"] == site_name)
+        ]
+
+        if not filtered_agents:
+            frappe.throw(f"Keine Agents gefunden für Mandant '{client_name}'" +
+                        (f" und Site '{site_name}'" if site_name else ""))
+
+        # Patch-Daten für jeden Agent abrufen
+        agents_with_patches = []
+        for agent in filtered_agents:
+            try:
+                patches = get_patches_for_agent(
+                    agent["agent_id"],
+                    documentation_name=documentation_name
+                )
+                patch_list = patches if isinstance(patches, list) else []
+
+                # Patches in installiert und ausstehend aufteilen
+                installed_patches = [p for p in patch_list if p.get("installed", False)]
+                pending_patches = [p for p in patch_list if not p.get("installed", False)]
+
+                # Berechne patches_last_installed aus den Patch-Daten
+                # Finde das neueste date_installed aus allen installierten Patches
+                patches_last_installed = ""
+                installed_dates = []
+                for p in installed_patches:
+                    date_inst = p.get("date_installed")
+                    if date_inst:
+                        installed_dates.append(date_inst)
+
+                if installed_dates:
+                    # Sortiere nach Datum (neuestes zuerst) und nimm das erste
+                    # TacticalRMM Format: "MM DD YYYY HH:MM" (z.B. "01 07 2026 09:21")
+                    def parse_rmm_date(date_str):
+                        """Parse TacticalRMM date format to comparable tuple"""
+                        try:
+                            parts = date_str.split()
+                            if len(parts) >= 3:
+                                month = int(parts[0])
+                                day = int(parts[1])
+                                year = int(parts[2])
+                                hour = 0
+                                minute = 0
+                                if len(parts) >= 4 and ":" in parts[3]:
+                                    time_parts = parts[3].split(":")
+                                    hour = int(time_parts[0])
+                                    minute = int(time_parts[1]) if len(time_parts) > 1 else 0
+                                return (year, month, day, hour, minute)
+                        except (ValueError, IndexError):
+                            pass
+                        return (0, 0, 0, 0, 0)  # Fallback für ungültige Daten
+
+                    try:
+                        # Sortiere nach geparstem Datum (neuestes zuerst)
+                        sorted_dates = sorted(installed_dates, key=parse_rmm_date, reverse=True)
+                        patches_last_installed = sorted_dates[0]
+                    except Exception:
+                        patches_last_installed = installed_dates[0] if installed_dates else ""
+
+                # wuauserv_status: Versuche aus Agent-Daten, ansonsten als "unknown"
+                # Die TacticalRMM API liefert wuauserv_status nur bei bestimmten Agent-Details
+                wuauserv_status = agent.get("wuauserv_status", "")
+                if not wuauserv_status:
+                    # Fallback: Wenn pending patches existieren und kürzlich installiert wurde,
+                    # nehmen wir an, dass der Dienst läuft
+                    wuauserv_status = "unknown"
+
+                agents_with_patches.append({
+                    "agent_id": agent["agent_id"],
+                    "hostname": agent["hostname"],
+                    "site_name": agent["site_name"],
+                    "operating_system": agent.get("operating_system", ""),
+                    "last_seen": agent.get("last_seen", ""),
+                    "status": agent.get("status", ""),
+                    # Update-spezifische Felder - berechnet aus Patch-Daten
+                    "patches_last_installed": patches_last_installed,
+                    "wuauserv_status": wuauserv_status,
+                    "needs_reboot": agent.get("needs_reboot", False),
+                    "has_patches_pending": len(pending_patches) > 0,
+                    # Alle Patches
+                    "patches": patch_list,
+                    # Aufgeteilte Listen für einfachere Anzeige
+                    "installed_patches": installed_patches,
+                    "pending_patches": pending_patches,
+                    # Zusammenfassung
+                    "summary": {
+                        "total": len(patch_list),
+                        "installed": len(installed_patches),
+                        "pending": len(pending_patches),
+                        "critical_pending": len([p for p in pending_patches if p.get("severity") == "Critical"]),
+                        "important_pending": len([p for p in pending_patches if p.get("severity") == "Important"])
+                    }
+                })
+            except Exception as e:
+                # Bei Fehlern für einzelne Agents weitermachen
+                frappe.log_error(
+                    f"Fehler beim Abrufen der Patches für Agent {agent['hostname']}: {str(e)}",
+                    "fetch_windows_update_data"
+                )
+                agents_with_patches.append({
+                    "agent_id": agent["agent_id"],
+                    "hostname": agent["hostname"],
+                    "site_name": agent["site_name"],
+                    "operating_system": agent.get("operating_system", ""),
+                    "last_seen": agent.get("last_seen", ""),
+                    "status": agent.get("status", ""),
+                    "patches_last_installed": "",  # Kann nicht ermittelt werden
+                    "wuauserv_status": "error",   # Fehler beim Abrufen
+                    "needs_reboot": agent.get("needs_reboot", False),
+                    "has_patches_pending": False,
+                    "patches": [],
+                    "installed_patches": [],
+                    "pending_patches": [],
+                    "summary": {"total": 0, "installed": 0, "pending": 0, "critical_pending": 0, "important_pending": 0},
+                    "error": str(e)
+                })
+
+        # Compliance-Score berechnen
+        compliance_data = _calculate_compliance_score(agents_with_patches)
+
+        # HTML-Report generieren
+        report_html = _generate_windows_update_html(compliance_data, agents_with_patches)
+        summary_html = _generate_summary_stats_html(compliance_data)
+
+        # Daten speichern
+        documentation_doc.windows_update_data_json = json.dumps({
+            "agents": agents_with_patches,
+            "compliance": compliance_data,
+            "last_sync": datetime.datetime.now().isoformat()
+        }, indent=2, default=str)
+        documentation_doc.windows_update_last_sync = datetime.datetime.now()
+        documentation_doc.windows_update_compliance_score = compliance_data["overall_score"]
+        documentation_doc.windows_update_report = report_html
+        documentation_doc.windows_update_summary_stats = summary_html
+        documentation_doc.save()
+
+        return {
+            "success": True,
+            "message": f"Windows Update Daten erfolgreich abgerufen. {len(agents_with_patches)} Computer analysiert.",
+            "agent_count": len(agents_with_patches),
+            "compliance_score": compliance_data["overall_score"],
+            "compliance_status": compliance_data["status"],
+            "totals": compliance_data["totals"]
+        }
+
+    except Exception as e:
+        frappe.log_error(f"Fehler beim Abrufen der Windows Update Daten: {str(e)}", "fetch_windows_update_data")
+        frappe.throw(f"Fehler beim Abrufen der Windows Update Daten: {str(e)}")
+
+
+# ==================== Ende Windows Update Reporting ====================
 
 
 @frappe.whitelist()
@@ -350,20 +1003,24 @@ def fetch_and_store_ad_computer_data(documentation_name):
         username = f"{domain}\\{ldap_credentials.username}"
         password = ldap_credentials.get_password()
         
-        # Server-Name ermitteln - entweder aus Domain Controller oder Domain
+        # Server-Name ermitteln - Priorität: 1) ip_address Feld, 2) Domain Controller, 3) Domain
         server_name = domain  # Standard-Fallback
-        
-        # Prüfen ob Domain Controller für LDAP-Acquisition angegeben ist
-        if documentation_doc.domain_controller_for_ldap_acquisition:
+
+        # Prüfen ob IP-Adresse im Documentation-Dokument eingetragen ist (kann manuell oder automatisch gesetzt sein)
+        if documentation_doc.ip_address:
+            server_name = documentation_doc.ip_address
+            print(f"INFO: IP-Adresse aus MSP Documentation verwendet: {server_name}")
+        # Fallback: Prüfen ob Domain Controller für LDAP-Acquisition angegeben ist
+        elif documentation_doc.domain_controller_for_ldap_acquisition:
             try:
                 # IT Object (Domain Controller) laden
                 domain_controller = frappe.get_doc("IT Object", documentation_doc.domain_controller_for_ldap_acquisition)
-                
+
                 # Prüfen ob eine Haupt-IP-Adresse angegeben ist
                 if domain_controller.main_ip:
                     # IP Address Dokument laden
                     ip_address_doc = frappe.get_doc("IP Address", domain_controller.main_ip)
-                    
+
                     # IP-Adresse als Server-Name verwenden
                     if ip_address_doc.ip_address:
                         server_name = ip_address_doc.ip_address
@@ -376,7 +1033,7 @@ def fetch_and_store_ad_computer_data(documentation_name):
                 frappe.log_error(f"Fehler beim Laden des Domain Controllers: {str(dc_error)} - verwende Domain als Fallback", "fetch_and_store_ad_computer_data")
         else:
             print("INFO: Kein Domain Controller angegeben - verwende Domain als Server-Name")
-        
+
         # Search Base aus Domain konstruieren
         domain_parts = domain.split('.')
         search_base = ','.join([f'DC={part}' for part in domain_parts])
@@ -534,21 +1191,25 @@ def fetch_and_store_ad_user_data(documentation_name):
         domain = ldap_credentials.domain
         username = f"{domain}\\{ldap_credentials.username}"
         password = ldap_credentials.get_password()
-        
-        # Server-Name ermitteln - entweder aus Domain Controller oder Domain
+
+        # Server-Name ermitteln - Priorität: 1) ip_address Feld, 2) Domain Controller, 3) Domain
         server_name = domain  # Standard-Fallback
-        
-        # Prüfen ob Domain Controller für LDAP-Acquisition angegeben ist
-        if documentation_doc.domain_controller_for_ldap_acquisition:
+
+        # Prüfen ob IP-Adresse im Documentation-Dokument eingetragen ist (kann manuell oder automatisch gesetzt sein)
+        if documentation_doc.ip_address:
+            server_name = documentation_doc.ip_address
+            print(f"INFO: IP-Adresse aus MSP Documentation verwendet: {server_name}")
+        # Fallback: Prüfen ob Domain Controller für LDAP-Acquisition angegeben ist
+        elif documentation_doc.domain_controller_for_ldap_acquisition:
             try:
                 # IT Object (Domain Controller) laden
                 domain_controller = frappe.get_doc("IT Object", documentation_doc.domain_controller_for_ldap_acquisition)
-                
+
                 # Prüfen ob eine Haupt-IP-Adresse angegeben ist
                 if domain_controller.main_ip:
                     # IP Address Dokument laden
                     ip_address_doc = frappe.get_doc("IP Address", domain_controller.main_ip)
-                    
+
                     # IP-Adresse als Server-Name verwenden
                     if ip_address_doc.ip_address:
                         server_name = ip_address_doc.ip_address
@@ -561,22 +1222,22 @@ def fetch_and_store_ad_user_data(documentation_name):
                 frappe.log_error(f"Fehler beim Laden des Domain Controllers: {str(dc_error)} - verwende Domain als Fallback", "fetch_and_store_ad_user_data")
         else:
             print("INFO: Kein Domain Controller angegeben - verwende Domain als Server-Name")
-        
+
         # Search Base aus Domain konstruieren
         domain_parts = domain.split('.')
         search_base = ','.join([f'DC={part}' for part in domain_parts])
-        
+
         # LDAP-Server verbinden
         server = Server(server_name, get_info=ALL)
         conn = Connection(server, user=username, password=password, authentication=NTLM)
-        
+
         # Verbindung herstellen
         if not conn.bind():
             frappe.throw(f"LDAP-Verbindung fehlgeschlagen. Prüfen Sie Server, Benutzername und Passwort.")
-        
+
         # Server-Info für automatische Domain-Erkennung
         server_info = server.info
-        
+
         # Search Base validieren und ggf. aus Server-Info extrahieren
         if hasattr(server_info, 'naming_contexts') and server_info.naming_contexts:
             for nc in server_info.naming_contexts:
@@ -679,6 +1340,201 @@ def fetch_and_store_ad_user_data(documentation_name):
     except Exception as e:
         frappe.log_error(f"Fehler beim Speichern der AD-Benutzer-Daten: {str(e)}", "fetch_and_store_ad_user_data")
         frappe.throw(f"Fehler beim Speichern der AD-Benutzer-Daten: {str(e)}")
+
+
+@frappe.whitelist()
+def test_ldap_connectivity(documentation_name):
+    """
+    Testet die LDAP-Konnektivität in mehreren Schritten:
+    1. Ping-Test (ICMP-Erreichbarkeit)
+    2. Port-Test (LDAP-Port 389 erreichbar)
+    3. LDAP-Bind-Test (Authentifizierung)
+
+    Args:
+        documentation_name (str): Name der MSP Documentation
+
+    Returns:
+        dict: Testergebnisse mit Status für jeden Schritt
+    """
+    import subprocess
+    import socket
+
+    results = {
+        "success": True,
+        "tests": {
+            "ping": {"status": "pending", "message": "", "duration_ms": None},
+            "port": {"status": "pending", "message": "", "duration_ms": None},
+            "ldap_bind": {"status": "pending", "message": "", "duration_ms": None}
+        },
+        "ip_address": None,
+        "overall_status": "pending"
+    }
+
+    try:
+        # MSP Documentation laden
+        documentation_doc = frappe.get_doc("MSP Documentation", documentation_name)
+
+        # IP-Adresse ermitteln
+        ip_address = None
+        if documentation_doc.ip_address:
+            ip_address = documentation_doc.ip_address
+        elif documentation_doc.domain_controller_for_ldap_acquisition:
+            try:
+                dc = frappe.get_doc("IT Object", documentation_doc.domain_controller_for_ldap_acquisition)
+                if dc.main_ip:
+                    ip_doc = frappe.get_doc("IP Address", dc.main_ip)
+                    ip_address = ip_doc.ip_address
+            except Exception:
+                pass
+
+        if not ip_address:
+            results["success"] = False
+            results["overall_status"] = "error"
+            results["tests"]["ping"]["status"] = "error"
+            results["tests"]["ping"]["message"] = "Keine IP-Adresse konfiguriert. Bitte Domain Controller auswählen."
+            return results
+
+        results["ip_address"] = ip_address
+
+        # ============ TEST 1: PING ============
+        import time
+        ping_start = time.time()
+        try:
+            # Ping mit 5 Sekunden Timeout, 1 Paket
+            ping_result = subprocess.run(
+                ["ping", "-c", "1", "-W", "5", ip_address],
+                capture_output=True,
+                text=True,
+                timeout=6
+            )
+            ping_duration = int((time.time() - ping_start) * 1000)
+            results["tests"]["ping"]["duration_ms"] = ping_duration
+
+            if ping_result.returncode == 0:
+                # Extrahiere RTT aus Ping-Output
+                output = ping_result.stdout
+                rtt_match = re.search(r'time[=<](\d+\.?\d*)\s*ms', output)
+                rtt = rtt_match.group(1) if rtt_match else "?"
+                results["tests"]["ping"]["status"] = "success"
+                results["tests"]["ping"]["message"] = f"Host erreichbar (RTT: {rtt} ms)"
+            else:
+                results["tests"]["ping"]["status"] = "error"
+                results["tests"]["ping"]["message"] = "Host nicht erreichbar (Timeout oder keine Antwort)"
+                results["overall_status"] = "error"
+                return results
+
+        except subprocess.TimeoutExpired:
+            results["tests"]["ping"]["status"] = "error"
+            results["tests"]["ping"]["message"] = "Ping-Timeout (> 5 Sekunden)"
+            results["tests"]["ping"]["duration_ms"] = 5000
+            results["overall_status"] = "error"
+            return results
+        except Exception as e:
+            results["tests"]["ping"]["status"] = "error"
+            results["tests"]["ping"]["message"] = f"Ping-Fehler: {str(e)}"
+            results["overall_status"] = "error"
+            return results
+
+        # ============ TEST 2: PORT 389 (LDAP) ============
+        port_start = time.time()
+        try:
+            sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+            sock.settimeout(5)
+            result = sock.connect_ex((ip_address, 389))
+            port_duration = int((time.time() - port_start) * 1000)
+            results["tests"]["port"]["duration_ms"] = port_duration
+            sock.close()
+
+            if result == 0:
+                results["tests"]["port"]["status"] = "success"
+                results["tests"]["port"]["message"] = "LDAP-Port 389 erreichbar"
+            else:
+                results["tests"]["port"]["status"] = "error"
+                results["tests"]["port"]["message"] = f"LDAP-Port 389 nicht erreichbar (Error: {result})"
+                results["overall_status"] = "partial"
+                # Port nicht erreichbar, aber Ping OK - weiter zum nächsten Test wäre sinnlos
+                return results
+
+        except socket.timeout:
+            results["tests"]["port"]["status"] = "error"
+            results["tests"]["port"]["message"] = "Port-Test Timeout (> 5 Sekunden)"
+            results["tests"]["port"]["duration_ms"] = 5000
+            results["overall_status"] = "partial"
+            return results
+        except Exception as e:
+            results["tests"]["port"]["status"] = "error"
+            results["tests"]["port"]["message"] = f"Port-Test Fehler: {str(e)}"
+            results["overall_status"] = "partial"
+            return results
+
+        # ============ TEST 3: LDAP BIND (Authentifizierung) ============
+        if not documentation_doc.credentials_for_ldap_acquisistion:
+            results["tests"]["ldap_bind"]["status"] = "skipped"
+            results["tests"]["ldap_bind"]["message"] = "Keine LDAP-Credentials konfiguriert"
+            results["overall_status"] = "partial"
+            return results
+
+        ldap_start = time.time()
+        try:
+            ldap_credentials = frappe.get_doc("IT User Account", documentation_doc.credentials_for_ldap_acquisistion)
+
+            if not ldap_credentials.username or not ldap_credentials.domain:
+                results["tests"]["ldap_bind"]["status"] = "error"
+                results["tests"]["ldap_bind"]["message"] = "Unvollständige LDAP-Credentials (Benutzername oder Domain fehlt)"
+                results["overall_status"] = "partial"
+                return results
+
+            domain = ldap_credentials.domain
+            username = f"{domain}\\{ldap_credentials.username}"
+            password = ldap_credentials.get_password()
+
+            # LDAP-Server mit Timeout verbinden
+            server = Server(ip_address, get_info=ALL, connect_timeout=5)
+            conn = Connection(
+                server,
+                user=username,
+                password=password,
+                authentication=NTLM,
+                receive_timeout=5
+            )
+
+            # Bind versuchen
+            bind_success = conn.bind()
+            ldap_duration = int((time.time() - ldap_start) * 1000)
+            results["tests"]["ldap_bind"]["duration_ms"] = ldap_duration
+
+            if bind_success:
+                results["tests"]["ldap_bind"]["status"] = "success"
+                results["tests"]["ldap_bind"]["message"] = f"LDAP-Authentifizierung erfolgreich (User: {ldap_credentials.username})"
+                results["overall_status"] = "success"
+                conn.unbind()
+            else:
+                results["tests"]["ldap_bind"]["status"] = "error"
+                error_msg = conn.result.get('description', 'Unbekannter Fehler') if conn.result else 'Bind fehlgeschlagen'
+                results["tests"]["ldap_bind"]["message"] = f"LDAP-Authentifizierung fehlgeschlagen: {error_msg}"
+                results["overall_status"] = "partial"
+
+        except Exception as e:
+            ldap_duration = int((time.time() - ldap_start) * 1000)
+            results["tests"]["ldap_bind"]["duration_ms"] = ldap_duration
+            results["tests"]["ldap_bind"]["status"] = "error"
+            error_str = str(e)
+            if "timeout" in error_str.lower():
+                results["tests"]["ldap_bind"]["message"] = "LDAP-Bind Timeout (> 5 Sekunden)"
+            else:
+                results["tests"]["ldap_bind"]["message"] = f"LDAP-Bind Fehler: {error_str[:100]}"
+            results["overall_status"] = "partial"
+
+        return results
+
+    except Exception as e:
+        frappe.log_error(f"Fehler beim LDAP-Konnektivitätstest: {str(e)}", "test_ldap_connectivity")
+        return {
+            "success": False,
+            "overall_status": "error",
+            "error": str(e),
+            "tests": results.get("tests", {})
+        }
 
 
 @frappe.whitelist()
