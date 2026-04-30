@@ -3,3 +3,4 @@ ipaddress
 passwordgenerator
 urbackup-server-web-api-wrapper
 pandas
+pycryptodome

@@ -6,6 +6,27 @@ from pprint import pprint
 import re
 import datetime
 import os
+
+# MD4 ist im OpenSSL der uv-bundled Python (python-build-standalone) nicht verfuegbar.
+# ldap3 braucht MD4 fuer NTLM-Authentifizierung gegen Active Directory. Wir patchen
+# hashlib.new(), damit es fuer 'md4' auf pycryptodome zurueckfaellt.
+import hashlib as _hashlib
+try:
+    _hashlib.new('md4')
+except Exception:
+    from Crypto.Hash import MD4 as _CryptoMD4
+    _orig_hashlib_new = _hashlib.new
+
+    def _hashlib_new_md4_fallback(name, data=b'', **kwargs):
+        if name.lower() in ('md4', 'md-4'):
+            h = _CryptoMD4.new()
+            if data:
+                h.update(data)
+            return h
+        return _orig_hashlib_new(name, data, **kwargs)
+
+    _hashlib.new = _hashlib_new_md4_fallback
+
 from ldap3 import Server, Connection, ALL, NTLM, SUBTREE
 from .tools import render_card_html, render_single_card
 
