@@ -416,12 +416,18 @@
   }
  ],
  "image_field": "image",
- "links": [],
- "modified": "2026-01-22 10:00:00.000000",
- "modified_by": "Administrator",
+ "links": [
+  {
+   "group": "IT",
+   "link_doctype": "IT Object",
+   "link_fieldname": "it_landscape"
+  }
+ ],
+ "modified": "2026-04-24 12:23:33.114334",
+ "modified_by": "D.Malinowski@itsdave.de",
  "module": "MSP",
  "name": "IT Object",
- "naming_rule": "Expression (old style)",
+ "naming_rule": "Expression",
  "owner": "Administrator",
  "permissions": [
   {
@@ -461,6 +467,7 @@
   }
  ],
  "quick_entry": 1,
+ "row_format": "Dynamic",
  "search_fields": "title, main_ip, item",
  "sort_field": "modified",
  "sort_order": "DESC",
