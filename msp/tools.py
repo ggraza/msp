@@ -544,7 +544,18 @@ def link_ERPNext_OTRS_Ticket(OTRSConnect_Ticket):
         frappe.msgprint("Kundennummerzuweisung nicht eindeutig möglich für: " + str(OTRSConnect_Ticket.customer_id) + "<br>" + str(OTRSConnect_Ticket.title) + "<br>" + str(OTRSConnect_Ticket.id))
 
 @frappe.whitelist()
+def _otrs_articles_vorhanden():
+    """OTRSConnect wurde am 26.08.2026 aus der Bench entfernt; auf Sites ohne diese
+    App existiert der DocType nicht mehr. Ohne diese Pruefung wirft jeder Zugriff einen
+    DoesNotExistError, den Frappe 16.31 fuer Benutzer ohne DocType-Leserecht in einen
+    irrefuehrenden PermissionError umwandelt - und der before_save-Hook am Service Report
+    laesst dann kein Speichern mehr zu."""
+    return bool(frappe.db.exists("DocType", "OTRSConnect Article"))
+
+
 def save_backlinks(doc, method):
+    if not _otrs_articles_vorhanden():
+        return
     service_report = doc 
     
     if hasattr(service_report, 'work'):
@@ -577,6 +588,9 @@ def handle_backlinks(doc, method):
         clear_backlinks(doc)
 
 def clear_backlinks(doc):
+    if not _otrs_articles_vorhanden():
+        return
+
     if hasattr(doc, 'work'):
         for item in doc.work:
             if hasattr(item, 'otrs_article'):
