@@ -30,7 +30,7 @@
   {
    "fieldname": "from_date",
    "fieldtype": "Date",
-   "label": "\u00a0From Date"
+   "label": "From Date"
   },
   {
    "fieldname": "preset",
@@ -75,12 +75,12 @@
   {
    "fieldname": "report_section",
    "fieldtype": "Section Break",
-   "label": " Report"
+   "label": "Report"
   },
   {
    "fieldname": "report_basierend_auf",
    "fieldtype": "Select",
-   "label": " Report basierend auf",
+   "label": "Report basierend auf",
    "options": "Rechnung\nLieferschein"
   },
   {
